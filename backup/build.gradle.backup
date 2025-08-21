@@ -1,0 +1,115 @@
+/*
+ * User Service - Gradle Build Configuration
+ * 
+ * 이 파일은 User Service의 빌드 설정을 관리합니다.
+ * Spring Boot 3.5.4와 Java 17을 사용하여 구성되었습니다.
+ * 
+ * 주요 설정:
+ * - Java 17 사용 (팀원들과 통일)
+ * - Spring Boot 3.5.4 (팀원들과 통일)
+ * - Spring Dependency Management 1.1.5
+ * - JPA, Security, Web, Thymeleaf 스타터 포함
+ * - Oracle DB 의존성 (운영 환경용, 현재 주석 처리)
+ * - H2 DB 의존성 (개발 환경용)
+ * - JWT 토큰 기반 인증 시스템
+ */
+
+plugins {
+    id 'java'                                    // Java 플러그인
+    id 'org.springframework.boot' version '3.5.4'           // Spring Boot 플러그인 (팀원들과 통일)
+    id 'io.spring.dependency-management' version '1.1.7'    // Spring 의존성 관리 플러그인 (팀원들과 통일)
+}
+
+// 프로젝트 기본 정보
+group = 'com.restaurant'                         // 그룹 ID
+version = '0.0.1-SNAPSHOT'                      // 버전 (스냅샷)
+
+// Java 버전 설정 (팀원들과 통일)
+java {
+    sourceCompatibility = JavaVersion.VERSION_17  // Java 17 사용 (팀원들과 통일)
+    targetCompatibility = JavaVersion.VERSION_17  // Java 17 사용 (팀원들과 통일)
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // =============================================================================
+    // Spring Boot Starters (핵심 기능)
+    // =============================================================================
+
+    // JPA (데이터베이스 ORM)
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // Spring Security (인증/인가)
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // Thymeleaf (템플릿 엔진)
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+    // Spring Web (REST API)
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Validation (입력값 검증)
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Spring Data JPA (데이터 접근)
+    implementation 'org.springframework.data:spring-data-jpa'
+
+    // Lombok (코드 생성 라이브러리)
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // =============================================================================
+    // AWS Cognito 인증 시스템
+    // =============================================================================
+    
+    // AWS SDK for Java v2
+    implementation 'software.amazon.awssdk:cognitoidentityprovider:2.24.12'
+    implementation 'software.amazon.awssdk:sts:2.24.12'
+    
+    // AWS Cognito JWT 검증
+    implementation 'com.auth0:java-jwt:4.4.0'
+    implementation 'com.auth0:jwks-rsa:0.22.1'
+
+    // =============================================================================
+    // 모니터링 및 헬스체크
+    // =============================================================================
+
+    // Spring Boot Actuator (헬스체크 및 모니터링)
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // =============================================================================
+    // 데이터베이스 의존성
+    // =============================================================================
+
+    // =============================================================================
+    // Oracle DB 의존성 (AWS MSA 프로덕션 환경용)
+    // 실제 배포 환경용 - 활성화
+    // =============================================================================
+    runtimeOnly 'com.oracle.database.jdbc:ojdbc11:23.3.0.23.09'
+
+    // H2 DB (개발 환경용 인메모리 데이터베이스) - 활성화
+    runtimeOnly 'com.h2database:h2'
+
+    // =============================================================================
+    // 테스트 의존성
+    // =============================================================================
+
+    // Spring Boot Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // Spring Security Test
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+} 

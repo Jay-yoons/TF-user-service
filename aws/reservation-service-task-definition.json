@@ -1,0 +1,80 @@
+{
+  "family": "reservation-service-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::ACCOUNT_ID:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::ACCOUNT_ID:role/ecsTaskRole",
+  "containerDefinitions": [
+    {
+      "name": "reservation-service",
+      "image": "ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/team-fog-reservation-service:latest",
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "SPRING_PROFILES_ACTIVE",
+          "value": "prod"
+        },
+        {
+          "name": "TZ",
+          "value": "Asia/Seoul"
+        },
+        {
+          "name": "JAVA_OPTS",
+          "value": "-Duser.timezone=Asia/Seoul -Dfile.encoding=UTF-8"
+        },
+        {
+          "name": "ORACLE_HOST",
+          "value": "primarydb.internal"
+        },
+        {
+          "name": "ORACLE_PORT",
+          "value": "1521"
+        },
+        {
+          "name": "ORACLE_SERVICE_NAME",
+          "value": "TEAMFOG"
+        },
+        {
+          "name": "ORACLE_USERNAME",
+          "value": "reservation_service"
+        },
+        {
+          "name": "USER_SERVICE_URL",
+          "value": "http://user-service.internal:8082"
+        },
+        {
+          "name": "STORE_SERVICE_URL",
+          "value": "http://store-service.internal:8081"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "ORACLE_PASSWORD",
+          "valueFrom": "arn:aws:secretsmanager:ap-northeast-2:ACCOUNT_ID:secret:team-fog/oracle/primarydb/password:password::"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/reservation-service",
+          "awslogs-region": "ap-northeast-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "healthCheck": {
+        "command": ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 60
+      }
+    }
+  ]
+}

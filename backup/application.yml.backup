@@ -1,0 +1,257 @@
+# =============================================================================
+# Team-FOG User Service Application Configuration
+# =============================================================================
+# 
+# 이 파일은 Team-FOG User Service의 설정 파일입니다.
+# 팀원들은 이 파일을 src/main/resources/ 폴더에 복사하여 사용하세요.
+#
+# 개발 환경: application-dev.yml
+# 테스트 환경: application-test.yml  
+# 프로덕션 환경: application-prod.yml
+# =============================================================================
+
+spring:
+  application:
+    name: user-service
+  
+  # =============================================================================
+  # 데이터베이스 설정
+  # =============================================================================
+  datasource:
+    # 개발용 H2 Database (로컬 개발 시) - 기본값
+    url: jdbc:h2:mem:userdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+    
+    # 프로덕션용 Oracle Database (AWS ECS 배포 시)
+    # 환경변수로 설정됨:
+    # - DB_HOST: EC2 Oracle DB Private IP
+    # - DB_PORT: Oracle DB 포트 (기본: 1521)
+    # - DB_SID: Oracle SID
+    # - DB_USERNAME: Oracle DB 사용자명
+    # - DB_PASSWORD: Oracle DB 비밀번호 (Secrets Manager에서 가져옴)
+    
+    # Oracle DB 설정 (프로덕션 환경에서 활성화)
+    # url: jdbc:oracle:thin:@${DB_HOST}:${DB_PORT}:${DB_SID}
+    # driver-class-name: oracle.jdbc.OracleDriver
+    # username: ${DB_USERNAME}
+    # password: ${DB_PASSWORD}
+    
+    # StandbyDB 설정 (읽기 전용)
+    # standby:
+    #   url: jdbc:oracle:thin:@${ORACLE_STANDBY_HOST}:${ORACLE_STANDBY_PORT}/${ORACLE_STANDBY_SERVICE_NAME}
+    #   username: ${ORACLE_STANDBY_USERNAME}
+    #   password: ${ORACLE_STANDBY_PASSWORD}
+  
+  # =============================================================================
+  # JPA 설정
+  # =============================================================================
+  jpa:
+    hibernate:
+      ddl-auto: create-drop  # 개발용: create-drop (테이블 재생성)
+    show-sql: true  # 개발용: SQL 로그 활성화
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect  # 개발용: H2Dialect
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+    
+    # Oracle DB 사용 시 추가 설정 (프로덕션용)
+    # properties:
+    #   hibernate:
+    #     dialect: org.hibernate.dialect.OracleDialect
+    #     jdbc:
+    #       batch_size: 20
+    #     order_inserts: true
+    #     order_updates: true
+  
+  # =============================================================================
+  # H2 Console (개발용) - 활성화
+  # =============================================================================
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  
+  # =============================================================================
+  # Jackson 설정
+  # =============================================================================
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+    time-zone: Asia/Seoul
+
+# =============================================================================
+# 서버 설정
+# =============================================================================
+server:
+  port: 8082
+  servlet:
+    context-path: /
+  
+  # =============================================================================
+  # CORS 설정
+  # =============================================================================
+  cors:
+    allowed-origins: 
+      - "http://localhost:3000"  # React 개발 서버
+      - "http://localhost:8080"  # Reservation Service
+      - "http://localhost:8081"  # Store Service
+      - "https://team-fog-frontend.com"  # 프로덕션 프론트엔드
+    allowed-methods:
+      - GET
+      - POST
+      - PUT
+      - DELETE
+      - OPTIONS
+    allowed-headers:
+      - "*"
+    allow-credentials: true
+
+# =============================================================================
+# AWS Cognito 설정
+# =============================================================================
+aws:
+  cognito:
+    user-pool-id: ap-northeast-2_bdkXgjghs
+    client-id: 2gjbllg398pvoe07n4oo39nvrb
+    client-secret:
+    domain: https://ap-northeast-2bdkxgjghs.auth.ap-northeast-2.amazoncognito.com
+    region: ap-northeast-2
+
+    jwks-url: https://cognito-idp.ap-northeast-2.amazonaws.com/ap-northeast-2_bdkXgjghs/.well-known/jwks.json
+    token-endpoint: https://ap-northeast-2bdkxgjghs.auth.ap-northeast-2.amazoncognito.com/oauth2/token
+    authorize-endpoint: https://ap-northeast-2bdkxgjghs.auth.ap-northeast-2.amazoncognito.com/oauth2/authorize
+    logout-endpoint: https://ap-northeast-2bdkxgjghs.auth.ap-northeast-2.amazoncognito.com/logout
+
+    redirect-uri: http://localhost:3000/callback
+    scope: openid profile email phone
+    response-type: code
+    grant-type: authorization_code
+
+# =============================================================================
+# MSA 서비스 URL 설정
+# =============================================================================
+msa:
+  service-urls:
+    # 로컬 개발 환경
+    store-service: http://localhost:8081
+    reservation-service: http://localhost:8080
+    
+    # 프로덕션 환경
+    # store-service: http://store-service.internal:8081
+    # reservation-service: http://reservation-service.internal:8080
+  
+  # 서비스 간 통신 설정
+  integration:
+    timeout: 5000  # 5초
+    retry-count: 3
+    circuit-breaker:
+      enabled: true
+      failure-threshold: 5
+      recovery-timeout: 30000  # 30초
+
+# =============================================================================
+# 로깅 설정
+# =============================================================================
+logging:
+  level:
+    root: INFO
+    com.restaurant.reservation: INFO
+    org.springframework.security: INFO
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN
+  
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  
+  file:
+    name: logs/user-service.log
+    max-size: 10MB
+    max-history: 30
+
+# =============================================================================
+# 보안 설정
+# =============================================================================
+security:
+  jwt:
+    secret: "team-fog-jwt-secret-key-2024"  # 실제 운영 시 환경변수로 관리
+    expiration: 3600000  # 1시간 (밀리초)
+    refresh-expiration: 86400000  # 24시간 (밀리초)
+  
+  # CORS 설정
+  cors:
+    allowed-origins: 
+      - "http://localhost:3000"
+      - "http://localhost:8080"
+      - "http://localhost:8081"
+      - "https://team-fog-frontend.com"
+
+# =============================================================================
+# 관리 엔드포인트 설정
+# =============================================================================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# =============================================================================
+# 프로덕션 환경 설정
+# =============================================================================
+---
+# 프로덕션 환경 설정
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:oracle:thin:@${ORACLE_HOST}:${ORACLE_PORT}/${ORACLE_SERVICE_NAME}
+    driver-class-name: oracle.jdbc.OracleDriver
+    username: ${ORACLE_USERNAME}
+    password: ${ORACLE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.OracleDialect
+
+aws:
+  cognito:
+    user-pool-id: ap-northeast-2_bdkXgjghs
+    client-id: 2gjbllg398pvoe07n4oo39nvrb
+    client-secret:
+    domain: https://ap-northeast-2bdkxgjghs.auth.ap-northeast-2.amazoncognito.com
+    region: ap-northeast-2
+
+    jwks-url: https://cognito-idp.ap-northeast-2.amazonaws.com/ap-northeast-2_bdkXgjghs/.well-known/jwks.json
+    token-endpoint: https://ap-northeast-2bdkxgjghs.auth.ap-northeast-2.amazoncognito.com/oauth2/token
+    authorize-endpoint: https://ap-northeast-2bdkxgjghs.auth.ap-northeast-2.amazoncognito.com/oauth2/authorize
+    logout-endpoint: https://ap-northeast-2bdkxgjghs.auth.ap-northeast-2.amazoncognito.com/logout
+
+    redirect-uri: http://localhost:3000/callback
+    scope: openid profile email phone
+    response-type: code
+    grant-type: authorization_code
+
+msa:
+  service-urls:
+    store-service: http://store-service.internal:8081
+    reservation-service: http://reservation-service.internal:8080
+
+logging:
+  level:
+    root: WARN
+    com.restaurant.reservation: INFO

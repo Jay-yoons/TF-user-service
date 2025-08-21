@@ -1,0 +1,1065 @@
+2025-08-21 09:18:30 [main] INFO  c.r.r.UserServiceApplication - Starting UserServiceApplication using Java 21.0.8 with PID 4924 (C:\Users\SD1-03\Team-FOG\TF-user-service\build\classes\java\main started by SD1-03 in C:\Users\SD1-03\Team-FOG\TF-user-service)
+2025-08-21 09:18:30 [main] DEBUG c.r.r.UserServiceApplication - Running with Spring Boot v3.5.4, Spring v6.2.9
+2025-08-21 09:18:30 [main] INFO  c.r.r.UserServiceApplication - No active profile set, falling back to 1 default profile: "default"
+2025-08-21 09:18:31 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-21 09:18:31 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 47 ms. Found 2 JPA repository interfaces.
+2025-08-21 09:18:31 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8085 (http)
+2025-08-21 09:18:31 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-08-21 09:18:31 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.43]
+2025-08-21 09:18:31 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-08-21 09:18:31 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1714 ms
+2025-08-21 09:18:31 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-21 09:18:31 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.22.Final
+2025-08-21 09:18:32 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-08-21 09:18:32 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-21 09:18:32 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-08-21 09:18:32 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:shareddb user=SA
+2025-08-21 09:18:32 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-08-21 09:18:32 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-08-21 09:18:32 [main] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-08-21 09:18:33 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-21 09:18:33 [main] DEBUG org.hibernate.SQL - 
+    drop table if exists user_review_view cascade 
+2025-08-21 09:18:33 [main] DEBUG org.hibernate.SQL - 
+    drop table if exists users cascade 
+2025-08-21 09:18:33 [main] DEBUG org.hibernate.SQL - 
+    create table user_review_view (
+        category_code integer,
+        score integer,
+        review_id bigint not null,
+        store_id varchar(20),
+        coment varchar(50),
+        store_location varchar(50),
+        store_name varchar(50),
+        user_id varchar(50),
+        primary key (review_id)
+    )
+2025-08-21 09:18:33 [main] DEBUG org.hibernate.SQL - 
+    create table users (
+        phone_number varchar(20) not null unique,
+        user_name varchar(20) not null,
+        user_id varchar(50) not null,
+        user_location varchar(50),
+        primary key (user_id)
+    )
+2025-08-21 09:18:33 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-21 09:18:33 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-08-21 09:18:34 [main] DEBUG c.r.r.c.AlbCognitoAuthenticationFilter - Filter 'albCognitoAuthenticationFilter' configured for use
+2025-08-21 09:18:34 [main] DEBUG c.r.r.c.CognitoAuthenticationFilter - Filter 'cognitoAuthenticationFilter' configured for use
+2025-08-21 09:18:34 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-21 09:18:35 [main] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 3 endpoints beneath base path '/actuator'
+2025-08-21 09:18:35 [main] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-08-21 09:18:35 [main] WARN  o.s.s.c.a.w.c.AuthorizeHttpRequestsConfigurer$AuthorizationManagerRequestMatcherRegistry - One of the patterns in [/login/status, /login/logout, /users/count, /users, /api/auth/**, /api/users/login, /api/users/login/url, /api/users/login/callback, /api/users/count, /api/users/signup, /api/users/check/**, /api/users/dashboard/counts, /health, /api/reviews/{id}, api/users/{id}/name] is missing a leading slash. This is discouraged; please include the leading slash in all your request matcher patterns. In future versions of Spring Security, leaving out the leading slash will result in an exception.
+2025-08-21 09:18:35 [main] DEBUG o.s.s.web.DefaultSecurityFilterChain - Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, LogoutFilter, AlbCognitoAuthenticationFilter, CognitoAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-08-21 09:18:35 [main] WARN  o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration - Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-08-21 09:18:35 [main] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:shareddb'
+2025-08-21 09:18:35 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8085 (http) with context path '/'
+2025-08-21 09:18:35 [main] INFO  c.r.r.UserServiceApplication - Started UserServiceApplication in 5.883 seconds (process running for 6.226)
+2025-08-21 09:29:10 [main] INFO  c.r.r.UserServiceApplication - Starting UserServiceApplication using Java 21.0.8 with PID 20296 (C:\Users\SD1-03\Team-FOG\TF-user-service\build\classes\java\main started by SD1-03 in C:\Users\SD1-03\Team-FOG\TF-user-service)
+2025-08-21 09:29:10 [main] DEBUG c.r.r.UserServiceApplication - Running with Spring Boot v3.5.4, Spring v6.2.9
+2025-08-21 09:29:10 [main] INFO  c.r.r.UserServiceApplication - No active profile set, falling back to 1 default profile: "default"
+2025-08-21 09:29:11 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-21 09:29:11 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 41 ms. Found 2 JPA repository interfaces.
+2025-08-21 09:29:11 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8085 (http)
+2025-08-21 09:29:11 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-08-21 09:29:11 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.43]
+2025-08-21 09:29:11 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-08-21 09:29:11 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1275 ms
+2025-08-21 09:29:11 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-21 09:29:12 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.22.Final
+2025-08-21 09:29:12 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-08-21 09:29:12 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-21 09:29:12 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-08-21 09:29:12 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:shareddb user=SA
+2025-08-21 09:29:12 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-08-21 09:29:12 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-08-21 09:29:12 [main] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-08-21 09:29:13 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-21 09:29:13 [main] DEBUG org.hibernate.SQL - 
+    drop table if exists user_review_view cascade 
+2025-08-21 09:29:13 [main] DEBUG org.hibernate.SQL - 
+    drop table if exists users cascade 
+2025-08-21 09:29:13 [main] DEBUG org.hibernate.SQL - 
+    create table user_review_view (
+        category_code integer,
+        score integer,
+        review_id bigint not null,
+        store_id varchar(20),
+        coment varchar(50),
+        store_location varchar(50),
+        store_name varchar(50),
+        user_id varchar(50),
+        primary key (review_id)
+    )
+2025-08-21 09:29:13 [main] DEBUG org.hibernate.SQL - 
+    create table users (
+        phone_number varchar(20) not null unique,
+        user_name varchar(20) not null,
+        user_id varchar(50) not null,
+        user_location varchar(50),
+        primary key (user_id)
+    )
+2025-08-21 09:29:13 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-21 09:29:13 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-08-21 09:29:13 [main] DEBUG c.r.r.c.AlbCognitoAuthenticationFilter - Filter 'albCognitoAuthenticationFilter' configured for use
+2025-08-21 09:29:13 [main] DEBUG c.r.r.c.CognitoAuthenticationFilter - Filter 'cognitoAuthenticationFilter' configured for use
+2025-08-21 09:29:14 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-21 09:29:14 [main] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 3 endpoints beneath base path '/actuator'
+2025-08-21 09:29:14 [main] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-08-21 09:29:14 [main] WARN  o.s.s.c.a.w.c.AuthorizeHttpRequestsConfigurer$AuthorizationManagerRequestMatcherRegistry - One of the patterns in [/login/status, /login/logout, /users/count, /users, /api/auth/**, /api/users/login, /api/users/login/url, /api/users/login/callback, /api/users/count, /api/users/signup, /api/users/check/**, /api/users/dashboard/counts, /health, /api/reviews/{id}, api/users/{id}/name] is missing a leading slash. This is discouraged; please include the leading slash in all your request matcher patterns. In future versions of Spring Security, leaving out the leading slash will result in an exception.
+2025-08-21 09:29:14 [main] DEBUG o.s.s.web.DefaultSecurityFilterChain - Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, LogoutFilter, AlbCognitoAuthenticationFilter, CognitoAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-08-21 09:29:14 [main] WARN  o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration - Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2025-08-21 09:29:14 [main] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:shareddb'
+2025-08-21 09:29:14 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8085 (http) with context path '/'
+2025-08-21 09:29:14 [main] INFO  c.r.r.UserServiceApplication - Started UserServiceApplication in 4.722 seconds (process running for 5.055)
+2025-08-21 09:34:42 [http-nio-8085-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-08-21 09:34:42 [http-nio-8085-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-08-21 09:34:43 [http-nio-8085-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-08-21 09:34:43 [http-nio-8085-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/7438ed2c-1051-70b6-9aab-aa5465799835/name
+2025-08-21 09:34:43 [http-nio-8085-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/94586ddc-f061-7005-8f71-fae9883a90b6/name
+2025-08-21 09:34:43 [http-nio-8085-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-08-21 09:34:43 [http-nio-8085-exec-4] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-08-21 09:34:43 [http-nio-8085-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/94586ddc-f061-7005-8f71-fae9883a90b6/name
+2025-08-21 09:34:43 [http-nio-8085-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/7438ed2c-1051-70b6-9aab-aa5465799835/name
+2025-08-21 09:34:43 [http-nio-8085-exec-4] INFO  c.r.r.controller.UserController - username 컨트롤러 진입
+2025-08-21 09:34:43 [http-nio-8085-exec-1] INFO  c.r.r.controller.UserController - username 컨트롤러 진입
+2025-08-21 09:34:43 [http-nio-8085-exec-4] INFO  c.r.reservation.service.UserService - username 서비스 진입
+2025-08-21 09:34:43 [http-nio-8085-exec-1] INFO  c.r.reservation.service.UserService - username 서비스 진입
+2025-08-21 09:34:43 [http-nio-8085-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:34:43 [http-nio-8085-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:34:43 [http-nio-8085-exec-4] INFO  c.r.reservation.service.UserService - username=이이이이
+2025-08-21 09:34:43 [http-nio-8085-exec-1] INFO  c.r.reservation.service.UserService - username=김김김
+2025-08-21 09:34:44 [http-nio-8085-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/login/url
+2025-08-21 09:34:44 [http-nio-8085-exec-3] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-08-21 09:34:44 [http-nio-8085-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/login/url
+2025-08-21 09:34:44 [http-nio-8085-exec-3] INFO  c.r.r.service.AwsCognitoService - Cognito 로그인 URL 생성: https://ap-northeast-2bdkxgjghs.auth.ap-northeast-2.amazoncognito.com/oauth2/authorize?response_type=code&client_id=k2q60p4rkctc3mpon0dui3v8h&redirect_uri=http://localhost:3000/callback&scope=openid profile email phone&state=e5f2470b-8861-4cd3-85d6-91ac61d78657
+2025-08-21 09:34:44 [http-nio-8085-exec-3] INFO  c.r.r.controller.UserController - Cognito 로그인 URL 생성 완료
+2025-08-21 09:34:51 [http-nio-8085-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/users/login/callback
+2025-08-21 09:34:51 [http-nio-8085-exec-2] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-08-21 09:34:51 [http-nio-8085-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/users/login/callback
+2025-08-21 09:34:51 [http-nio-8085-exec-2] INFO  c.r.r.controller.UserController - Cognito 콜백 처리: code=76804788-5b4c-4cc0-afbf-15d7b8f64357, state=null
+2025-08-21 09:34:51 [http-nio-8085-exec-2] INFO  c.r.r.service.AwsCognitoService - 인증 코드로 토큰 교환 시작: code=76804788-5b4c-4cc0-afbf-15d7b8f64357
+2025-08-21 09:34:51 [http-nio-8085-exec-2] INFO  c.r.r.service.AwsCognitoService - 토큰 교환 성공: access_token 존재=true
+2025-08-21 09:34:51 [http-nio-8085-exec-2] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 09:34:51 [http-nio-8085-exec-2] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:34:51 [http-nio-8085-exec-2] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:34:51 [http-nio-8085-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        count(*) 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:34:51 [http-nio-8085-exec-2] INFO  c.r.r.controller.UserController - 회원가입 요청
+2025-08-21 09:34:51 [http-nio-8085-exec-2] INFO  c.r.reservation.service.UserService - 회원가입 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c, userName=로그아웃좀, phoneNumber=+8201013572468
+2025-08-21 09:34:51 [http-nio-8085-exec-2] INFO  c.r.reservation.service.UserService - 전화번호 정규화: +8201013572468 -> +82 01 0135 72468
+2025-08-21 09:34:51 [http-nio-8085-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        count(*) 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:34:51 [http-nio-8085-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id 
+    from
+        users u1_0 
+    where
+        u1_0.phone_number=? 
+    fetch
+        first ? rows only
+2025-08-21 09:34:51 [http-nio-8085-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:34:51 [http-nio-8085-exec-2] INFO  c.r.reservation.service.UserService - 회원가입 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:34:51 [http-nio-8085-exec-2] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        users
+        (phone_number, user_location, user_name, user_id) 
+    values
+        (?, ?, ?, ?)
+2025-08-21 09:34:51 [http-nio-8085-exec-2] INFO  c.r.r.controller.UserController - 회원가입 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:34:51 [http-nio-8085-exec-2] INFO  c.r.r.controller.UserController - Cognito 로그인 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:34:51 [http-nio-8085-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/me
+2025-08-21 09:34:51 [http-nio-8085-exec-5] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 09:34:51 [http-nio-8085-exec-5] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 09:34:51 [http-nio-8085-exec-5] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 09:34:51 [http-nio-8085-exec-5] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 09:34:51 [http-nio-8085-exec-5] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:34:51 [http-nio-8085-exec-5] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:34:51 [http-nio-8085-exec-5] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:34:51 [http-nio-8085-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:34:51 [http-nio-8085-exec-5] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:34:51 [http-nio-8085-exec-5] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:34:51 [http-nio-8085-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/me
+2025-08-21 09:34:51 [http-nio-8085-exec-5] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:34:51 [http-nio-8085-exec-5] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:34:51 [http-nio-8085-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:34:51 [http-nio-8085-exec-5] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:34:51 [http-nio-8085-exec-5] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:19 [http-nio-8085-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/me
+2025-08-21 09:35:19 [http-nio-8085-exec-6] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 09:35:19 [http-nio-8085-exec-6] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 09:35:19 [http-nio-8085-exec-6] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 09:35:19 [http-nio-8085-exec-6] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 09:35:19 [http-nio-8085-exec-6] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:19 [http-nio-8085-exec-6] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:19 [http-nio-8085-exec-6] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:19 [http-nio-8085-exec-6] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:35:19 [http-nio-8085-exec-6] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:19 [http-nio-8085-exec-6] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:19 [http-nio-8085-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/me
+2025-08-21 09:35:19 [http-nio-8085-exec-6] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:19 [http-nio-8085-exec-6] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:19 [http-nio-8085-exec-6] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:35:19 [http-nio-8085-exec-6] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:19 [http-nio-8085-exec-6] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:26 [http-nio-8085-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/me
+2025-08-21 09:35:26 [http-nio-8085-exec-7] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 09:35:26 [http-nio-8085-exec-7] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 09:35:26 [http-nio-8085-exec-7] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 09:35:26 [http-nio-8085-exec-7] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 09:35:26 [http-nio-8085-exec-7] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:26 [http-nio-8085-exec-7] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:26 [http-nio-8085-exec-7] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:26 [http-nio-8085-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:35:26 [http-nio-8085-exec-7] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:26 [http-nio-8085-exec-7] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:26 [http-nio-8085-exec-7] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/me
+2025-08-21 09:35:26 [http-nio-8085-exec-7] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:26 [http-nio-8085-exec-7] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:26 [http-nio-8085-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:35:26 [http-nio-8085-exec-7] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:26 [http-nio-8085-exec-7] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:52 [http-nio-8085-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/7438ed2c-1051-70b6-9aab-aa5465799835/name
+2025-08-21 09:35:52 [http-nio-8085-exec-8] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 09:35:52 [http-nio-8085-exec-8] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 09:35:52 [http-nio-8085-exec-8] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 09:35:52 [http-nio-8085-exec-8] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 09:35:52 [http-nio-8085-exec-8] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:52 [http-nio-8085-exec-8] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:52 [http-nio-8085-exec-8] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:52 [http-nio-8085-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:35:52 [http-nio-8085-exec-8] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:52 [http-nio-8085-exec-8] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:35:52 [http-nio-8085-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/7438ed2c-1051-70b6-9aab-aa5465799835/name
+2025-08-21 09:35:52 [http-nio-8085-exec-8] INFO  c.r.r.controller.UserController - username 컨트롤러 진입
+2025-08-21 09:35:52 [http-nio-8085-exec-8] INFO  c.r.reservation.service.UserService - username 서비스 진입
+2025-08-21 09:35:52 [http-nio-8085-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:35:52 [http-nio-8085-exec-8] INFO  c.r.reservation.service.UserService - username=김김김
+2025-08-21 09:40:27 [http-nio-8085-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/me
+2025-08-21 09:40:27 [http-nio-8085-exec-9] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 09:40:27 [http-nio-8085-exec-9] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 09:40:27 [http-nio-8085-exec-9] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 09:40:27 [http-nio-8085-exec-9] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 09:40:27 [http-nio-8085-exec-9] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:27 [http-nio-8085-exec-9] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:27 [http-nio-8085-exec-9] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:27 [http-nio-8085-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:40:27 [http-nio-8085-exec-9] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:27 [http-nio-8085-exec-9] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:27 [http-nio-8085-exec-9] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/me
+2025-08-21 09:40:27 [http-nio-8085-exec-9] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:27 [http-nio-8085-exec-9] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:27 [http-nio-8085-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:40:27 [http-nio-8085-exec-9] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:27 [http-nio-8085-exec-9] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:30 [http-nio-8085-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/me
+2025-08-21 09:40:30 [http-nio-8085-exec-10] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 09:40:30 [http-nio-8085-exec-10] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 09:40:30 [http-nio-8085-exec-10] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 09:40:30 [http-nio-8085-exec-10] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 09:40:30 [http-nio-8085-exec-10] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:30 [http-nio-8085-exec-10] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:30 [http-nio-8085-exec-10] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:30 [http-nio-8085-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:40:30 [http-nio-8085-exec-10] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:30 [http-nio-8085-exec-10] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:30 [http-nio-8085-exec-10] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/me
+2025-08-21 09:40:30 [http-nio-8085-exec-10] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:30 [http-nio-8085-exec-10] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:30 [http-nio-8085-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:40:30 [http-nio-8085-exec-10] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:30 [http-nio-8085-exec-10] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:36 [http-nio-8085-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/me
+2025-08-21 09:40:36 [http-nio-8085-exec-4] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 09:40:36 [http-nio-8085-exec-4] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 09:40:36 [http-nio-8085-exec-4] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 09:40:36 [http-nio-8085-exec-4] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 09:40:36 [http-nio-8085-exec-4] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:36 [http-nio-8085-exec-4] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:36 [http-nio-8085-exec-4] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:36 [http-nio-8085-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:40:36 [http-nio-8085-exec-4] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:36 [http-nio-8085-exec-4] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:36 [http-nio-8085-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/me
+2025-08-21 09:40:36 [http-nio-8085-exec-4] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:36 [http-nio-8085-exec-4] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:36 [http-nio-8085-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:40:36 [http-nio-8085-exec-4] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:40:36 [http-nio-8085-exec-4] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:02 [http-nio-8085-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/me
+2025-08-21 09:41:02 [http-nio-8085-exec-1] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 09:41:02 [http-nio-8085-exec-1] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 09:41:02 [http-nio-8085-exec-1] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 09:41:02 [http-nio-8085-exec-1] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 09:41:02 [http-nio-8085-exec-1] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:02 [http-nio-8085-exec-1] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:02 [http-nio-8085-exec-1] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:02 [http-nio-8085-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:41:02 [http-nio-8085-exec-1] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:02 [http-nio-8085-exec-1] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:02 [http-nio-8085-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/me
+2025-08-21 09:41:02 [http-nio-8085-exec-1] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:02 [http-nio-8085-exec-1] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:02 [http-nio-8085-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:41:02 [http-nio-8085-exec-1] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:02 [http-nio-8085-exec-1] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:16 [http-nio-8085-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/7438ed2c-1051-70b6-9aab-aa5465799835/name
+2025-08-21 09:41:16 [http-nio-8085-exec-3] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 09:41:16 [http-nio-8085-exec-3] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 09:41:16 [http-nio-8085-exec-3] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 09:41:16 [http-nio-8085-exec-3] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 09:41:16 [http-nio-8085-exec-3] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:16 [http-nio-8085-exec-3] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:16 [http-nio-8085-exec-3] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:16 [http-nio-8085-exec-3] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:41:16 [http-nio-8085-exec-3] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:16 [http-nio-8085-exec-3] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:16 [http-nio-8085-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/7438ed2c-1051-70b6-9aab-aa5465799835/name
+2025-08-21 09:41:16 [http-nio-8085-exec-3] INFO  c.r.r.controller.UserController - username 컨트롤러 진입
+2025-08-21 09:41:16 [http-nio-8085-exec-3] INFO  c.r.reservation.service.UserService - username 서비스 진입
+2025-08-21 09:41:16 [http-nio-8085-exec-3] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:41:16 [http-nio-8085-exec-3] INFO  c.r.reservation.service.UserService - username=김김김
+2025-08-21 09:41:18 [http-nio-8085-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/7438ed2c-1051-70b6-9aab-aa5465799835/name
+2025-08-21 09:41:18 [http-nio-8085-exec-2] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 09:41:18 [http-nio-8085-exec-2] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 09:41:18 [http-nio-8085-exec-2] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 09:41:18 [http-nio-8085-exec-2] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 09:41:18 [http-nio-8085-exec-2] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:18 [http-nio-8085-exec-2] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:18 [http-nio-8085-exec-2] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:18 [http-nio-8085-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:41:18 [http-nio-8085-exec-2] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:18 [http-nio-8085-exec-2] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:18 [http-nio-8085-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/7438ed2c-1051-70b6-9aab-aa5465799835/name
+2025-08-21 09:41:18 [http-nio-8085-exec-2] INFO  c.r.r.controller.UserController - username 컨트롤러 진입
+2025-08-21 09:41:18 [http-nio-8085-exec-2] INFO  c.r.reservation.service.UserService - username 서비스 진입
+2025-08-21 09:41:18 [http-nio-8085-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:41:18 [http-nio-8085-exec-2] INFO  c.r.reservation.service.UserService - username=김김김
+2025-08-21 09:41:19 [http-nio-8085-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/me
+2025-08-21 09:41:19 [http-nio-8085-exec-5] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 09:41:19 [http-nio-8085-exec-5] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 09:41:19 [http-nio-8085-exec-5] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 09:41:19 [http-nio-8085-exec-5] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 09:41:19 [http-nio-8085-exec-5] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:19 [http-nio-8085-exec-5] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:19 [http-nio-8085-exec-5] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:19 [http-nio-8085-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:41:19 [http-nio-8085-exec-5] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:19 [http-nio-8085-exec-5] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:19 [http-nio-8085-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/me
+2025-08-21 09:41:19 [http-nio-8085-exec-5] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:19 [http-nio-8085-exec-5] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:19 [http-nio-8085-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:41:19 [http-nio-8085-exec-5] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:41:19 [http-nio-8085-exec-5] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:36 [http-nio-8085-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/me
+2025-08-21 09:47:36 [http-nio-8085-exec-6] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 09:47:36 [http-nio-8085-exec-6] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 09:47:36 [http-nio-8085-exec-6] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 09:47:36 [http-nio-8085-exec-6] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 09:47:36 [http-nio-8085-exec-6] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:36 [http-nio-8085-exec-6] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:36 [http-nio-8085-exec-6] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:36 [http-nio-8085-exec-6] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:47:36 [http-nio-8085-exec-6] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:36 [http-nio-8085-exec-6] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:36 [http-nio-8085-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/me
+2025-08-21 09:47:36 [http-nio-8085-exec-6] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:36 [http-nio-8085-exec-6] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:36 [http-nio-8085-exec-6] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:47:36 [http-nio-8085-exec-6] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:36 [http-nio-8085-exec-6] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:41 [http-nio-8085-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/me
+2025-08-21 09:47:41 [http-nio-8085-exec-7] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 09:47:41 [http-nio-8085-exec-7] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 09:47:41 [http-nio-8085-exec-7] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 09:47:41 [http-nio-8085-exec-7] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 09:47:41 [http-nio-8085-exec-7] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:41 [http-nio-8085-exec-7] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:41 [http-nio-8085-exec-7] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:41 [http-nio-8085-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:47:41 [http-nio-8085-exec-7] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:41 [http-nio-8085-exec-7] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:41 [http-nio-8085-exec-7] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/me
+2025-08-21 09:47:41 [http-nio-8085-exec-7] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:41 [http-nio-8085-exec-7] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:41 [http-nio-8085-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:47:41 [http-nio-8085-exec-7] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:41 [http-nio-8085-exec-7] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:58 [http-nio-8085-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/me
+2025-08-21 09:47:58 [http-nio-8085-exec-8] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 09:47:58 [http-nio-8085-exec-8] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 09:47:58 [http-nio-8085-exec-8] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 09:47:58 [http-nio-8085-exec-8] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 09:47:58 [http-nio-8085-exec-8] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:58 [http-nio-8085-exec-8] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:58 [http-nio-8085-exec-8] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:58 [http-nio-8085-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:47:58 [http-nio-8085-exec-8] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:58 [http-nio-8085-exec-8] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:58 [http-nio-8085-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/me
+2025-08-21 09:47:58 [http-nio-8085-exec-8] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:58 [http-nio-8085-exec-8] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:58 [http-nio-8085-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:47:58 [http-nio-8085-exec-8] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:47:58 [http-nio-8085-exec-8] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:55:26 [http-nio-8085-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/users/logout
+2025-08-21 09:55:26 [http-nio-8085-exec-9] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 09:55:26 [http-nio-8085-exec-9] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 09:55:26 [http-nio-8085-exec-9] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 09:55:26 [http-nio-8085-exec-9] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 09:55:26 [http-nio-8085-exec-9] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:55:26 [http-nio-8085-exec-9] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:55:26 [http-nio-8085-exec-9] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:55:26 [http-nio-8085-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:55:26 [http-nio-8085-exec-9] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:55:26 [http-nio-8085-exec-9] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:55:26 [http-nio-8085-exec-9] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/users/logout
+2025-08-21 09:55:26 [http-nio-8085-exec-9] INFO  c.r.r.controller.UserController - 로그아웃 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:55:26 [http-nio-8085-exec-9] INFO  c.r.r.controller.UserController - 로그아웃 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:56:43 [http-nio-8085-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/login/url
+2025-08-21 09:56:43 [http-nio-8085-exec-10] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-08-21 09:56:43 [http-nio-8085-exec-10] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/login/url
+2025-08-21 09:56:43 [http-nio-8085-exec-10] INFO  c.r.r.service.AwsCognitoService - Cognito 로그인 URL 생성: https://ap-northeast-2bdkxgjghs.auth.ap-northeast-2.amazoncognito.com/oauth2/authorize?response_type=code&client_id=k2q60p4rkctc3mpon0dui3v8h&redirect_uri=http://localhost:3000/callback&scope=openid profile email phone&state=2ea3c074-ee11-4531-a222-2209815fa291
+2025-08-21 09:56:43 [http-nio-8085-exec-10] INFO  c.r.r.controller.UserController - Cognito 로그인 URL 생성 완료
+2025-08-21 09:57:00 [http-nio-8085-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/users/login/callback
+2025-08-21 09:57:00 [http-nio-8085-exec-4] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-08-21 09:57:00 [http-nio-8085-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/users/login/callback
+2025-08-21 09:57:00 [http-nio-8085-exec-4] INFO  c.r.r.controller.UserController - Cognito 콜백 처리: code=9010ceae-f4b1-41ec-84b5-53e9890a0039, state=null
+2025-08-21 09:57:00 [http-nio-8085-exec-4] INFO  c.r.r.service.AwsCognitoService - 인증 코드로 토큰 교환 시작: code=9010ceae-f4b1-41ec-84b5-53e9890a0039
+2025-08-21 09:57:01 [http-nio-8085-exec-4] INFO  c.r.r.service.AwsCognitoService - 토큰 교환 성공: access_token 존재=true
+2025-08-21 09:57:01 [http-nio-8085-exec-4] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 09:57:01 [http-nio-8085-exec-4] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:57:01 [http-nio-8085-exec-4] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:57:01 [http-nio-8085-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        count(*) 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:57:01 [http-nio-8085-exec-4] INFO  c.r.r.controller.UserController - Cognito 로그인 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:57:01 [http-nio-8085-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/me
+2025-08-21 09:57:01 [http-nio-8085-exec-1] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 09:57:01 [http-nio-8085-exec-1] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 09:57:01 [http-nio-8085-exec-1] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 09:57:01 [http-nio-8085-exec-1] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 09:57:01 [http-nio-8085-exec-1] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:57:01 [http-nio-8085-exec-1] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:57:01 [http-nio-8085-exec-1] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:57:01 [http-nio-8085-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:57:01 [http-nio-8085-exec-1] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:57:01 [http-nio-8085-exec-1] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:57:01 [http-nio-8085-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/me
+2025-08-21 09:57:01 [http-nio-8085-exec-1] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:57:01 [http-nio-8085-exec-1] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:57:01 [http-nio-8085-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:57:01 [http-nio-8085-exec-1] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:57:01 [http-nio-8085-exec-1] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:58:46 [http-nio-8085-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/7438ed2c-1051-70b6-9aab-aa5465799835/name
+2025-08-21 09:58:46 [http-nio-8085-exec-3] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 09:58:46 [http-nio-8085-exec-3] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 09:58:46 [http-nio-8085-exec-3] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 09:58:46 [http-nio-8085-exec-3] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 09:58:46 [http-nio-8085-exec-3] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:58:46 [http-nio-8085-exec-3] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:58:46 [http-nio-8085-exec-3] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:58:46 [http-nio-8085-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/94586ddc-f061-7005-8f71-fae9883a90b6/name
+2025-08-21 09:58:46 [http-nio-8085-exec-3] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:58:46 [http-nio-8085-exec-2] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 09:58:46 [http-nio-8085-exec-2] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 09:58:46 [http-nio-8085-exec-2] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 09:58:46 [http-nio-8085-exec-2] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 09:58:46 [http-nio-8085-exec-2] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:58:46 [http-nio-8085-exec-2] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:58:46 [http-nio-8085-exec-2] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:58:46 [http-nio-8085-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:58:46 [http-nio-8085-exec-3] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:58:46 [http-nio-8085-exec-3] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:58:46 [http-nio-8085-exec-2] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:58:46 [http-nio-8085-exec-2] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:58:46 [http-nio-8085-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/7438ed2c-1051-70b6-9aab-aa5465799835/name
+2025-08-21 09:58:46 [http-nio-8085-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/94586ddc-f061-7005-8f71-fae9883a90b6/name
+2025-08-21 09:58:46 [http-nio-8085-exec-3] INFO  c.r.r.controller.UserController - username 컨트롤러 진입
+2025-08-21 09:58:46 [http-nio-8085-exec-2] INFO  c.r.r.controller.UserController - username 컨트롤러 진입
+2025-08-21 09:58:46 [http-nio-8085-exec-2] INFO  c.r.reservation.service.UserService - username 서비스 진입
+2025-08-21 09:58:46 [http-nio-8085-exec-3] INFO  c.r.reservation.service.UserService - username 서비스 진입
+2025-08-21 09:58:46 [http-nio-8085-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:58:46 [http-nio-8085-exec-3] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:58:46 [http-nio-8085-exec-3] INFO  c.r.reservation.service.UserService - username=김김김
+2025-08-21 09:58:46 [http-nio-8085-exec-2] INFO  c.r.reservation.service.UserService - username=이이이이
+2025-08-21 09:58:57 [http-nio-8085-exec-5] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/me
+2025-08-21 09:58:57 [http-nio-8085-exec-5] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 09:58:57 [http-nio-8085-exec-5] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 09:58:57 [http-nio-8085-exec-5] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 09:58:57 [http-nio-8085-exec-5] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 09:58:57 [http-nio-8085-exec-5] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:58:57 [http-nio-8085-exec-5] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:58:57 [http-nio-8085-exec-5] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:58:57 [http-nio-8085-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:58:57 [http-nio-8085-exec-5] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:58:57 [http-nio-8085-exec-5] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:58:57 [http-nio-8085-exec-5] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/me
+2025-08-21 09:58:57 [http-nio-8085-exec-5] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:58:57 [http-nio-8085-exec-5] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:58:57 [http-nio-8085-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:58:57 [http-nio-8085-exec-5] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:58:57 [http-nio-8085-exec-5] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:59:22 [http-nio-8085-exec-6] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/users/logout
+2025-08-21 09:59:22 [http-nio-8085-exec-6] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 09:59:22 [http-nio-8085-exec-6] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 09:59:22 [http-nio-8085-exec-6] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 09:59:22 [http-nio-8085-exec-6] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 09:59:22 [http-nio-8085-exec-6] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:59:22 [http-nio-8085-exec-6] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:59:22 [http-nio-8085-exec-6] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:59:22 [http-nio-8085-exec-6] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:59:22 [http-nio-8085-exec-6] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:59:22 [http-nio-8085-exec-6] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:59:22 [http-nio-8085-exec-6] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/users/logout
+2025-08-21 09:59:22 [http-nio-8085-exec-6] INFO  c.r.r.controller.UserController - 로그아웃 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:59:22 [http-nio-8085-exec-6] INFO  c.r.r.controller.UserController - 로그아웃 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 09:59:26 [http-nio-8085-exec-7] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/login/url
+2025-08-21 09:59:26 [http-nio-8085-exec-7] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-08-21 09:59:26 [http-nio-8085-exec-7] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/login/url
+2025-08-21 09:59:26 [http-nio-8085-exec-7] INFO  c.r.r.service.AwsCognitoService - Cognito 로그인 URL 생성: https://ap-northeast-2bdkxgjghs.auth.ap-northeast-2.amazoncognito.com/oauth2/authorize?response_type=code&client_id=k2q60p4rkctc3mpon0dui3v8h&redirect_uri=http://localhost:3000/callback&scope=openid profile email phone&state=d9226e1f-9bd6-4a7b-baa8-f51a1332a3aa
+2025-08-21 09:59:26 [http-nio-8085-exec-7] INFO  c.r.r.controller.UserController - Cognito 로그인 URL 생성 완료
+2025-08-21 09:59:35 [http-nio-8085-exec-8] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/7438ed2c-1051-70b6-9aab-aa5465799835/name
+2025-08-21 09:59:35 [http-nio-8085-exec-8] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-08-21 09:59:35 [http-nio-8085-exec-8] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/7438ed2c-1051-70b6-9aab-aa5465799835/name
+2025-08-21 09:59:35 [http-nio-8085-exec-8] INFO  c.r.r.controller.UserController - username 컨트롤러 진입
+2025-08-21 09:59:35 [http-nio-8085-exec-8] INFO  c.r.reservation.service.UserService - username 서비스 진입
+2025-08-21 09:59:35 [http-nio-8085-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 09:59:35 [http-nio-8085-exec-8] INFO  c.r.reservation.service.UserService - username=김김김
+2025-08-21 10:58:43 [HikariPool-1:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=34m105ms646µs700ns).
+2025-08-21 11:11:55 [HikariPool-1:housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=11m11s321ms679µs).
+2025-08-21 11:17:11 [http-nio-8085-exec-9] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/login/url
+2025-08-21 11:17:11 [http-nio-8085-exec-9] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-08-21 11:17:11 [http-nio-8085-exec-9] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/login/url
+2025-08-21 11:17:11 [http-nio-8085-exec-9] INFO  c.r.r.service.AwsCognitoService - Cognito 로그인 URL 생성: https://ap-northeast-2bdkxgjghs.auth.ap-northeast-2.amazoncognito.com/oauth2/authorize?response_type=code&client_id=k2q60p4rkctc3mpon0dui3v8h&redirect_uri=http://localhost:3000/callback&scope=openid profile email phone&state=c170bc9d-3af4-449f-8cf0-3a89f73f807e
+2025-08-21 11:17:11 [http-nio-8085-exec-9] INFO  c.r.r.controller.UserController - Cognito 로그인 URL 생성 완료
+2025-08-21 11:17:18 [http-nio-8085-exec-10] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/users/login/callback
+2025-08-21 11:17:18 [http-nio-8085-exec-10] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-08-21 11:17:18 [http-nio-8085-exec-10] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/users/login/callback
+2025-08-21 11:17:18 [http-nio-8085-exec-10] INFO  c.r.r.controller.UserController - Cognito 콜백 처리: code=b0a4d9f6-068e-4678-8042-76286dc4c8cf, state=null
+2025-08-21 11:17:18 [http-nio-8085-exec-10] INFO  c.r.r.service.AwsCognitoService - 인증 코드로 토큰 교환 시작: code=b0a4d9f6-068e-4678-8042-76286dc4c8cf
+2025-08-21 11:17:18 [http-nio-8085-exec-10] INFO  c.r.r.service.AwsCognitoService - 토큰 교환 성공: access_token 존재=true
+2025-08-21 11:17:18 [http-nio-8085-exec-10] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 11:17:18 [http-nio-8085-exec-10] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:18 [http-nio-8085-exec-10] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:18 [http-nio-8085-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        count(*) 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 11:17:18 [http-nio-8085-exec-10] INFO  c.r.r.controller.UserController - Cognito 로그인 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:18 [http-nio-8085-exec-4] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/me
+2025-08-21 11:17:18 [http-nio-8085-exec-4] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 11:17:18 [http-nio-8085-exec-4] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 11:17:18 [http-nio-8085-exec-4] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 11:17:18 [http-nio-8085-exec-4] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 11:17:18 [http-nio-8085-exec-4] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:18 [http-nio-8085-exec-4] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:18 [http-nio-8085-exec-4] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:18 [http-nio-8085-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 11:17:18 [http-nio-8085-exec-4] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:18 [http-nio-8085-exec-4] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:18 [http-nio-8085-exec-4] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/me
+2025-08-21 11:17:18 [http-nio-8085-exec-4] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:18 [http-nio-8085-exec-4] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:18 [http-nio-8085-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 11:17:18 [http-nio-8085-exec-4] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:18 [http-nio-8085-exec-4] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:22 [http-nio-8085-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/me
+2025-08-21 11:17:22 [http-nio-8085-exec-1] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 11:17:22 [http-nio-8085-exec-1] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 11:17:22 [http-nio-8085-exec-1] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 11:17:22 [http-nio-8085-exec-1] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 11:17:22 [http-nio-8085-exec-1] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:22 [http-nio-8085-exec-1] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:22 [http-nio-8085-exec-1] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:22 [http-nio-8085-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 11:17:22 [http-nio-8085-exec-1] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:22 [http-nio-8085-exec-1] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:22 [http-nio-8085-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/me
+2025-08-21 11:17:22 [http-nio-8085-exec-1] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:22 [http-nio-8085-exec-1] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:22 [http-nio-8085-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 11:17:22 [http-nio-8085-exec-1] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:22 [http-nio-8085-exec-1] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:29 [http-nio-8085-exec-3] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/users/me
+2025-08-21 11:17:29 [http-nio-8085-exec-3] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 11:17:29 [http-nio-8085-exec-3] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 11:17:29 [http-nio-8085-exec-3] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 11:17:29 [http-nio-8085-exec-3] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 11:17:29 [http-nio-8085-exec-3] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:29 [http-nio-8085-exec-3] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:29 [http-nio-8085-exec-3] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:29 [http-nio-8085-exec-3] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 11:17:29 [http-nio-8085-exec-3] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:29 [http-nio-8085-exec-3] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:29 [http-nio-8085-exec-3] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/users/me
+2025-08-21 11:17:29 [http-nio-8085-exec-3] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:29 [http-nio-8085-exec-3] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:29 [http-nio-8085-exec-3] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 11:17:29 [http-nio-8085-exec-3] INFO  c.r.reservation.service.UserService - 통합 마이페이지 정보 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:29 [http-nio-8085-exec-3] INFO  c.r.r.controller.UserController - 통합 마이페이지 조회 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:43 [http-nio-8085-exec-2] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/users/logout
+2025-08-21 11:17:43 [http-nio-8085-exec-2] DEBUG c.r.r.service.AwsCognitoService - 토큰 유효성 검증 시작
+2025-08-21 11:17:43 [http-nio-8085-exec-2] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰 검증 성공
+2025-08-21 11:17:43 [http-nio-8085-exec-2] DEBUG c.r.r.service.AwsCognitoService - 토큰 검증 성공
+2025-08-21 11:17:43 [http-nio-8085-exec-2] INFO  c.r.r.service.AwsCognitoService - ID 토큰에서 사용자 정보 조회
+2025-08-21 11:17:43 [http-nio-8085-exec-2] DEBUG c.r.reservation.config.JwtTokenUtil - JWT 토큰에서 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:43 [http-nio-8085-exec-2] DEBUG c.r.r.service.AwsCognitoService - 사용자 정보 추출 성공: sub=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:43 [http-nio-8085-exec-2] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:43 [http-nio-8085-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.user_id,
+        u1_0.phone_number,
+        u1_0.user_location,
+        u1_0.user_name 
+    from
+        users u1_0 
+    where
+        u1_0.user_id=?
+2025-08-21 11:17:43 [http-nio-8085-exec-2] DEBUG c.r.r.c.CustomUserDetailsService - 사용자 정보 로드 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:43 [http-nio-8085-exec-2] DEBUG c.r.r.c.CognitoAuthenticationFilter - Cognito 인증 성공: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:43 [http-nio-8085-exec-2] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/users/logout
+2025-08-21 11:17:43 [http-nio-8085-exec-2] INFO  c.r.r.controller.UserController - 로그아웃 요청: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c
+2025-08-21 11:17:43 [http-nio-8085-exec-2] INFO  c.r.r.controller.UserController - 로그아웃 완료: userId=7458ad7c-3031-705a-cb95-7fe2fd60445c

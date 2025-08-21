@@ -1,0 +1,119 @@
+{
+  "family": "standbydb",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["EC2"],
+  "cpu": "4096",
+  "memory": "8192",
+  "executionRoleArn": "arn:aws:iam::YOUR_ACCOUNT_ID:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::YOUR_ACCOUNT_ID:role/standbydb-task-role",
+  "containerDefinitions": [
+    {
+      "name": "standbydb",
+      "image": "container-registry.oracle.com/database/enterprise:21.3.0.0",
+      "portMappings": [
+        {
+          "containerPort": 1521,
+          "protocol": "tcp"
+        },
+        {
+          "containerPort": 5500,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "ORACLE_PWD",
+          "value": "Oracle123456"
+        },
+        {
+          "name": "ORACLE_CHARACTERSET",
+          "value": "AL32UTF8"
+        },
+        {
+          "name": "ORACLE_EDITION",
+          "value": "enterprise"
+        },
+        {
+          "name": "ORACLE_BASE",
+          "value": "/opt/oracle"
+        },
+        {
+          "name": "ORACLE_HOME",
+          "value": "/opt/oracle/product/21c/dbhomeXE"
+        },
+        {
+          "name": "STANDBY_MODE",
+          "value": "true"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "ORACLE_PWD",
+          "valueFrom": "arn:aws:secretsmanager:ap-northeast-2:YOUR_ACCOUNT_ID:secret:standbydb/password"
+        }
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "oracle-data",
+          "containerPath": "/opt/oracle/oradata",
+          "readOnly": false
+        },
+        {
+          "sourceVolume": "oracle-backup",
+          "containerPath": "/opt/oracle/backup",
+          "readOnly": false
+        },
+        {
+          "sourceVolume": "oracle-logs",
+          "containerPath": "/opt/oracle/diag",
+          "readOnly": false
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/standbydb",
+          "awslogs-region": "ap-northeast-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "sqlplus -s / as sysdba <<EOF\nSELECT 1 FROM DUAL;\nEXIT;\nEOF"
+        ],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 600
+      },
+      "essential": true
+    }
+  ],
+  "volumes": [
+    {
+      "name": "oracle-data",
+      "efsVolumeConfiguration": {
+        "fileSystemId": "fs-xxxxxxxxx",
+        "rootDirectory": "/standbydb-data",
+        "transitEncryption": "ENABLED"
+      }
+    },
+    {
+      "name": "oracle-backup",
+      "efsVolumeConfiguration": {
+        "fileSystemId": "fs-xxxxxxxxx",
+        "rootDirectory": "/standbydb-backup",
+        "transitEncryption": "ENABLED"
+      }
+    },
+    {
+      "name": "oracle-logs",
+      "efsVolumeConfiguration": {
+        "fileSystemId": "fs-xxxxxxxxx",
+        "rootDirectory": "/standbydb-logs",
+        "transitEncryption": "ENABLED"
+      }
+    }
+  ]
+}

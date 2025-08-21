@@ -1,0 +1,227 @@
+{
+  "AutoScalingConfig": {
+    "description": "예약 몰림 상황을 대비한 자동 스케일링 설정",
+    "scalableTargets": {
+      "reservationService": {
+        "serviceNamespace": "ecs",
+        "scalableDimension": "ecs:service:DesiredCount",
+        "resourceId": "service/team-fog-cluster/team-fog-reservation-service",
+        "minCapacity": 2,
+        "maxCapacity": 20,
+        "roleARN": "arn:aws:iam::YOUR_ACCOUNT_ID:role/ecsAutoscaleRole"
+      },
+      "userService": {
+        "serviceNamespace": "ecs",
+        "scalableDimension": "ecs:service:DesiredCount",
+        "resourceId": "service/team-fog-cluster/team-fog-user-service",
+        "minCapacity": 2,
+        "maxCapacity": 15,
+        "roleARN": "arn:aws:iam::YOUR_ACCOUNT_ID:role/ecsAutoscaleRole"
+      },
+      "storeService": {
+        "serviceNamespace": "ecs",
+        "scalableDimension": "ecs:service:DesiredCount",
+        "resourceId": "service/team-fog-cluster/team-fog-store-service",
+        "minCapacity": 2,
+        "maxCapacity": 15,
+        "roleARN": "arn:aws:iam::YOUR_ACCOUNT_ID:role/ecsAutoscaleRole"
+      }
+    },
+    "scalingPolicies": {
+      "cpuBasedScaling": {
+        "policyName": "cpu-scaling-policy",
+        "policyType": "TargetTrackingScaling",
+        "targetTrackingScalingPolicyConfiguration": {
+          "targetValue": 70.0,
+          "predefinedMetricSpecification": {
+            "predefinedMetricType": "ECSServiceAverageCPUUtilization"
+          },
+          "scaleOutCooldown": 60,
+          "scaleInCooldown": 300
+        }
+      },
+      "memoryBasedScaling": {
+        "policyName": "memory-scaling-policy",
+        "policyType": "TargetTrackingScaling",
+        "targetTrackingScalingPolicyConfiguration": {
+          "targetValue": 80.0,
+          "predefinedMetricSpecification": {
+            "predefinedMetricType": "ECSServiceAverageMemoryUtilization"
+          },
+          "scaleOutCooldown": 60,
+          "scaleInCooldown": 300
+        }
+      },
+      "requestBasedScaling": {
+        "policyName": "request-scaling-policy",
+        "policyType": "TargetTrackingScaling",
+        "targetTrackingScalingPolicyConfiguration": {
+          "targetValue": 1000.0,
+          "predefinedMetricSpecification": {
+            "predefinedMetricType": "ALBRequestCountPerTarget"
+          },
+          "scaleOutCooldown": 30,
+          "scaleInCooldown": 300
+        }
+      }
+    },
+    "scheduledActions": {
+      "peakTimeScaling": {
+        "scheduledActionName": "peak-time-scaling",
+        "serviceNamespace": "ecs",
+        "scalableDimension": "ecs:service:DesiredCount",
+        "resourceId": "service/team-fog-cluster/team-fog-reservation-service",
+        "schedule": "cron(0 11 * * ? *)",
+        "scalableTargetAction": {
+          "minCapacity": 5,
+          "maxCapacity": 25
+        }
+      },
+      "offPeakScaling": {
+        "scheduledActionName": "off-peak-scaling",
+        "serviceNamespace": "ecs",
+        "scalableDimension": "ecs:service:DesiredCount",
+        "resourceId": "service/team-fog-cluster/team-fog-reservation-service",
+        "schedule": "cron(0 23 * * ? *)",
+        "scalableTargetAction": {
+          "minCapacity": 2,
+          "maxCapacity": 10
+        }
+      }
+    }
+  },
+  "CloudWatchAlarms": {
+    "highCPUAlarm": {
+      "alarmName": "reservation-service-high-cpu",
+      "alarmDescription": "Reservation Service CPU 사용률이 높음",
+      "metricName": "CPUUtilization",
+      "namespace": "AWS/ECS",
+      "dimensions": [
+        {
+          "Name": "ServiceName",
+          "Value": "team-fog-reservation-service"
+        },
+        {
+          "Name": "ClusterName",
+          "Value": "team-fog-cluster"
+        }
+      ],
+      "threshold": 80,
+      "comparisonOperator": "GreaterThanThreshold",
+      "evaluationPeriods": 2,
+      "period": 60,
+      "statistic": "Average",
+      "treatMissingData": "notBreaching"
+    },
+    "highMemoryAlarm": {
+      "alarmName": "reservation-service-high-memory",
+      "alarmDescription": "Reservation Service 메모리 사용률이 높음",
+      "metricName": "MemoryUtilization",
+      "namespace": "AWS/ECS",
+      "dimensions": [
+        {
+          "Name": "ServiceName",
+          "Value": "team-fog-reservation-service"
+        },
+        {
+          "Name": "ClusterName",
+          "Value": "team-fog-cluster"
+        }
+      ],
+      "threshold": 85,
+      "comparisonOperator": "GreaterThanThreshold",
+      "evaluationPeriods": 2,
+      "period": 60,
+      "statistic": "Average",
+      "treatMissingData": "notBreaching"
+    },
+    "highRequestRateAlarm": {
+      "alarmName": "reservation-service-high-requests",
+      "alarmDescription": "Reservation Service 요청률이 높음",
+      "metricName": "RequestCount",
+      "namespace": "AWS/ApplicationELB",
+      "dimensions": [
+        {
+          "Name": "TargetGroup",
+          "Value": "team-fog-reservation-tg"
+        }
+      ],
+      "threshold": 1000,
+      "comparisonOperator": "GreaterThanThreshold",
+      "evaluationPeriods": 1,
+      "period": 60,
+      "statistic": "Sum",
+      "treatMissingData": "notBreaching"
+    }
+  },
+  "LoadBalancerConfig": {
+    "targetGroups": {
+      "reservationService": {
+        "targetGroupName": "team-fog-reservation-tg",
+        "port": 8080,
+        "protocol": "HTTP",
+        "vpcId": "vpc-xxxxx",
+        "healthCheckPath": "/health",
+        "healthCheckInterval": 30,
+        "healthCheckTimeout": 5,
+        "healthyThresholdCount": 2,
+        "unhealthyThresholdCount": 3,
+        "targetType": "ip"
+      }
+    },
+    "listeners": {
+      "httpListener": {
+        "loadBalancerArn": "arn:aws:elasticloadbalancing:ap-northeast-2:YOUR_ACCOUNT_ID:loadbalancer/app/team-fog-alb/xxxxx",
+        "port": 80,
+        "protocol": "HTTP",
+        "defaultActions": [
+          {
+            "type": "forward",
+            "targetGroupArn": "arn:aws:elasticloadbalancing:ap-northeast-2:YOUR_ACCOUNT_ID:targetgroup/team-fog-reservation-tg/xxxxx"
+          }
+        ]
+      }
+    }
+  },
+  "DatabaseConfig": {
+    "connectionPooling": {
+      "maxPoolSize": 50,
+      "minPoolSize": 10,
+      "connectionTimeout": 30000,
+      "idleTimeout": 600000,
+      "maxLifetime": 1800000
+    },
+    "readReplicas": {
+      "enabled": true,
+      "count": 2,
+      "autoScaling": {
+        "minCapacity": 1,
+        "maxCapacity": 5,
+        "targetCPUUtilization": 70
+      }
+    }
+  },
+  "CachingConfig": {
+    "redis": {
+      "enabled": true,
+      "clusterMode": true,
+      "nodeType": "cache.t3.micro",
+      "numCacheNodes": 3,
+      "autoScaling": {
+        "enabled": true,
+        "minCapacity": 3,
+        "maxCapacity": 10
+      }
+    },
+    "applicationCache": {
+      "bookingCache": {
+        "ttl": 300,
+        "maxSize": 10000
+      },
+      "storeCache": {
+        "ttl": 1800,
+        "maxSize": 5000
+      }
+    }
+  }
+}

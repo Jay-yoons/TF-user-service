@@ -1,0 +1,99 @@
+{
+  "family": "user-service",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::YOUR_ACCOUNT_ID:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::YOUR_ACCOUNT_ID:role/user-service-task-role",
+  "containerDefinitions": [
+    {
+      "name": "user-service",
+      "image": "YOUR_ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/user-service:latest",
+      "portMappings": [
+        {
+          "containerPort": 8082,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "SPRING_PROFILES_ACTIVE",
+          "value": "prod"
+        },
+        {
+          "name": "TZ",
+          "value": "Asia/Seoul"
+        },
+        {
+          "name": "JAVA_OPTS",
+          "value": "-Duser.timezone=Asia/Seoul -Dfile.encoding=UTF-8"
+        },
+        {
+          "name": "DB_HOST",
+          "value": "your-rds-endpoint.ap-northeast-2.rds.amazonaws.com"
+        },
+        {
+          "name": "DB_NAME",
+          "value": "userdb"
+        },
+        {
+          "name": "COGNITO_USER_POOL_ID",
+          "value": "ap-northeast-2_xxxxxxxxx"
+        },
+        {
+          "name": "COGNITO_CLIENT_ID",
+          "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        },
+        {
+          "name": "COGNITO_DOMAIN",
+          "value": "team-fog.auth.ap-northeast-2.amazoncognito.com"
+        },
+        {
+          "name": "RESERVATION_SERVICE_URL",
+          "value": "http://reservation-service.internal:8080"
+        },
+        {
+          "name": "STORE_SERVICE_URL",
+          "value": "http://store-service.internal:8081"
+        },
+        {
+          "name": "FRONTEND_URL",
+          "value": "https://your-frontend-domain.com"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "DB_USERNAME",
+          "valueFrom": "arn:aws:secretsmanager:ap-northeast-2:YOUR_ACCOUNT_ID:secret:user-service/db-username"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "valueFrom": "arn:aws:secretsmanager:ap-northeast-2:YOUR_ACCOUNT_ID:secret:user-service/db-password"
+        },
+        {
+          "name": "COGNITO_CLIENT_SECRET",
+          "valueFrom": "arn:aws:secretsmanager:ap-northeast-2:YOUR_ACCOUNT_ID:secret:user-service/cognito-client-secret"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/user-service",
+          "awslogs-region": "ap-northeast-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8082/health || exit 1"
+        ],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 60
+      }
+    }
+  ]
+}
