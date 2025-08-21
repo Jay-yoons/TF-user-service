@@ -1,0 +1,65 @@
+# Gradle
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+
+# Build outputs
+build/
+out/
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Documentation
+README.md
+*.md
+docs/
+
+# Test files
+src/test/
+
+# AWS configuration (배포 스크립트만 제외)
+aws/
+!aws/deployment-scripts/
+!aws/*-task-definition.json
+!aws/auto-scaling-config.json
+
+# API test files
+*.http
+
+# Terraform
+terraform/
+
+# Docker
+Dockerfile*
+.dockerignore
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Development files
+application-dev.yml
+env-example.txt
