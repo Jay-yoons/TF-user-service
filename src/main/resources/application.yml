@@ -18,17 +18,16 @@ spring:
   # 데이터베이스 설정
   # =============================================================================
   datasource:
-    # 공유 H2 Database (Store Service와 데이터 공유)
-    url: jdbc:h2:mem:shareddb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-
-    # 프로덕션용 Oracle Database (실제 배포 시)
-    # url: jdbc:oracle:thin:@${ORACLE_HOST}:${ORACLE_PORT}/${ORACLE_SERVICE_NAME}
-    # driver-class-name: oracle.jdbc.OracleDriver
-    # username: ${ORACLE_USERNAME}
-    # password: ${ORACLE_PASSWORD}
+    # Oracle Database 연결 설정
+    url: jdbc:oracle:thin:@//localhost:1521/PDB_USER
+    driver-class-name: oracle.jdbc.OracleDriver
+    username: USER_ADMIN
+    password: oracle
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 30000
+      connection-timeout: 30000
 
     # StandbyDB 설정 (읽기 전용)
     # standby:
@@ -41,17 +40,13 @@ spring:
   # =============================================================================
   jpa:
     hibernate:
-      ddl-auto: create-drop  # 개발용: create-drop, 프로덕션용: validate
-    show-sql: true
-    defer-datasource-initialization: true
+      ddl-auto: validate
+      dialect: org.hibernate.dialect.OracleDialect
+    show-sql: false
     properties:
       hibernate:
-        format_sql: true
-        dialect: org.hibernate.dialect.H2Dialect  # 개발용: H2Dialect, 프로덕션용: OracleDialect
-        jdbc:
-          batch_size: 20
-        order_inserts: true
-        order_updates: true
+        format_sql: false
+    defer-datasource-initialization: true
 
     # Oracle DB 사용 시 추가 설정
     # properties:
@@ -63,12 +58,12 @@ spring:
     #     order_updates: true
 
   # =============================================================================
-  # H2 Console (개발용)
+  # H2 Console (개발용) - 주석 처리
   # =============================================================================
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+  # h2:
+  #   console:
+  #     enabled: true
+  #     path: /h2-console
 
   # =============================================================================
   # Jackson 설정
