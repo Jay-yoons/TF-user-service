@@ -1,0 +1,62 @@
+# =============================================================================
+# 프로덕션 환경 설정
+# =============================================================================
+# 프로덕션 환경 설정
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:oracle:thin:@//${DB_HOST}:${DB_PORT}/${DB_NAME}
+    driver-class-name: oracle.jdbc.OracleDriver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 30000
+      connection-timeout: 30000
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.OracleDialect
+
+aws:
+  cognito:
+    user-pool-id: ${AWS_COGNITO_USER_POOL_ID}
+    client-id: ${AWS_COGNITO_CLIENT_ID}
+    client-secret: ${AWS_COGNITO_CLIENT_SECRET}
+    domain: ${AWS_COGNITO_DOMAIN}
+    region: ap-northeast-2
+
+    jwks-url: ${AWS_COGNITO_JWKS_URL}
+    token-endpoint: ${AWS_COGNITO_TOKEN_ENDPOINT}
+    authorize-endpoint: ${AWS_COGNITO_AUTHORIZE_ENDPOINT}
+    logout-endpoint: ${AWS_COGNITO_LOGOUT_ENDPOINT}
+
+    redirect-uri: ${AWS_COGNITO_REDIRECT_URI}
+    scope: openid profile email phone
+    response-type: code
+    grant-type: authorization_code
+
+msa:
+  service-urls:
+    store-service: http://store-service.internal:8081
+    reservation-service: http://reservation-service.internal:8080
+
+logging:
+  level:
+    root: WARN
+    com.restaurant.reservation: INFO
+
+server:
+  port: 8085
+
+security:
+  jwt:
+    secret: ${JWT_SECRET_KEY} # 실제 운영 시 환경변수로 관리
+    expiration: 3600000  # 1시간 (밀리초)
+    refresh-expiration: 86400000  # 24시간 (밀리초)
