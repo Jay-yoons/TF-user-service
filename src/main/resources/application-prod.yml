@@ -26,18 +26,18 @@ spring:
 
 aws:
   cognito:
-    user-pool-id: ${AWS_COGNITO_USER_POOL_ID}
-    client-id: ${AWS_COGNITO_CLIENT_ID}
-    client-secret: ${AWS_COGNITO_CLIENT_SECRET}
-    domain: ${AWS_COGNITO_DOMAIN}
+    user-pool-id: ${COGNITO_USER_POOL_ID}
+    client-id: ${COGNITO_CLIENT_ID}
+    client-secret: ${COGNITO_CLIENT_SECRET}
+    domain: ${COGNITO_DOMAIN}
     region: ap-northeast-2
 
-    jwks-url: ${AWS_COGNITO_JWKS_URL}
-    token-endpoint: ${AWS_COGNITO_TOKEN_ENDPOINT}
-    authorize-endpoint: ${AWS_COGNITO_AUTHORIZE_ENDPOINT}
-    logout-endpoint: ${AWS_COGNITO_LOGOUT_ENDPOINT}
+    jwks-url: ${COGNITO_JWKS_URL}
+    token-endpoint: ${COGNITO_TOKEN_ENDPOINT}
+    authorize-endpoint: ${COGNITO_AUTHORIZE_ENDPOINT}
+    logout-endpoint: ${COGNITO_LOGOUT_ENDPOINT}
 
-    redirect-uri: ${AWS_COGNITO_REDIRECT_URI}
+    redirect-uri: ${COGNITO_REDIRECT_URI}
     scope: openid profile email phone
     response-type: code
     grant-type: authorization_code
