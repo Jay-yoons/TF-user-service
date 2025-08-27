@@ -42,11 +42,6 @@ aws:
     response-type: code
     grant-type: authorization_code
 
-msa:
-  service-urls:
-    store-service: http://store-service.internal:8081
-    reservation-service: http://reservation-service.internal:8080
-
 logging:
   level:
     root: WARN
