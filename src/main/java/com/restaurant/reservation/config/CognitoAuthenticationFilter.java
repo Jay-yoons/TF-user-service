@@ -42,7 +42,26 @@ public class CognitoAuthenticationFilter extends OncePerRequestFilter {
         this.cognitoConfig = cognitoConfig;
         this.userDetailsService = userDetailsService;
     }
-    
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String[] publicPaths = {
+                "/api/users/login",
+                "/api/users/login/url",
+                "/api/users/login/callback",
+                "/health",
+                "/api/health/**",
+                "/actuator/**"
+        };
+        String requestURI = request.getRequestURI();
+        for (String path : publicPaths) {
+            if (requestURI.startsWith(path.replace("/**", ""))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
