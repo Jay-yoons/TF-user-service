@@ -35,20 +35,6 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = {
-    "http://localhost:3000",  // Vue.js 개발 서버
-    "http://localhost:8080",  // Vite 개발 서버
-    "http://localhost:8081",  // 추가 개발 서버
-    "http://localhost:8082",  // User Service 자체
-    "http://localhost:5173",  // Vite 기본 포트
-    "http://localhost:4173",  // Vite 프리뷰 포트
-    "http://127.0.0.1:3000",  // IP 주소
-    "http://127.0.0.1:8080",
-    "http://127.0.0.1:8081",
-    "http://127.0.0.1:8082",
-    "http://127.0.0.1:5173",
-    "http://127.0.0.1:4173"
-}, allowCredentials = "true")
 public class UserController {
     
     // 로깅을 위한 Logger 인스턴스
