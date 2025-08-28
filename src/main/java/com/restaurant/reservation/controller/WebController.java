@@ -86,6 +86,19 @@ public class WebController {
     }
 
     /**
+     * ELB 헬스체크용 간단한 엔드포인트
+     * 데이터베이스 연결 없이 빠른 응답
+     */
+    @GetMapping("/health/elb")
+    public ResponseEntity<Map<String, Object>> elbHealth() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "UP");
+        response.put("service", "user-service");
+        response.put("timestamp", java.time.LocalDateTime.now().toString());
+        return ResponseEntity.ok(response);
+    }
+
+    /**
      * Health Check 로그 테스트
      */
     @GetMapping("/health/log-test")

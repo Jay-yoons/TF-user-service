@@ -52,7 +52,7 @@ public class SecurityConfig {
                                 // 공개 API
                                 "/api/auth/**", "/api/users/login", "/api/users/login/url", "/api/users/login/callback",
                                 "/api/users/count", "/api/users/signup", "/api/users/check/**",
-                                "/api/users/dashboard/counts", "/health", "/health/detailed", "/health/log-test", "/api/reviews/{id}", "/api/users/{id}/name",
+                                "/api/users/dashboard/counts", "/health", "/health/**", "/health/detailed", "/health/log-test", "/api/reviews/{id}", "/api/users/{id}/name",
                                 "/login/status", "/login/logout", "/users/count", "/users",
                                 // MSA 연동 API
                                 "/msa/**", "/api/msa/**", "/api/health/**", "/api/test/**").permitAll()
