@@ -10,8 +10,6 @@ import jakarta.annotation.PostConstruct;
 import java.util.TimeZone;
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = "com.restaurant.reservation.repository")
-@EntityScan(basePackages = "com.restaurant.reservation.entity")
 @EnableScheduling
 public class UserServiceApplication {
 

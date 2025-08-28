@@ -13,27 +13,36 @@ spring:
     properties:
       hibernate:
         format_sql: true  #SQL이 어케 돌아 가야되는지 확인 해야됨
+        defer-datasource-initialization: true
         connection-test-query: SELECT 1 FROM DUAL
         connection-timeout: 30000
-        maximum-pool-size: 10
-        minimum-idle: 2
-        idle-timeout: 600000
-        max-lifetime: 1800000
-        leak-detection-threshold: 60000
+        maximum-pool-size: 20
+        minimum-idle: 5
+        idle-timeout: 30000
         characterEncoding: UTF-8
         time_zone: Asia/Seoul
   datasource:
-    url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=10.0.13.41)(PORT=1521))(ADDRESS=(PROTOCOL=TCP)(HOST=10.0.13.76)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=PDB_USER))(FAILOVER=on)(LOAD_BALANCE=off))
+    url: >-
+      jdbc:oracle:thin:@(DESCRIPTION=
+        (ADDRESS_LIST=
+          (ADDRESS=(PROTOCOL=TCP)(HOST=${DB_HOST})(PORT=${DB_PORT}))
+          (ADDRESS=(PROTOCOL=TCP)(HOST=10.0.13.76)(PORT=${DB_PORT}))
+        )
+        (CONNECT_DATA=(SERVICE_NAME=${DB_NAME}))
+        (FAILOVER=on)(LOAD_BALANCE=off)
+      )
     driver-class-name: oracle.jdbc.OracleDriver
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 30000
+      connection-timeout: 30000
   mvc:
     hiddenmethod:
       filter:
         enabled: true
-
-server:
-  port: 8080
 
 logging:
   level:
