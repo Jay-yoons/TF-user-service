@@ -165,9 +165,33 @@ public class UserController {
             String idToken = (String) tokenResponse.get("id_token");
             Map<String, Object> userInfo = cognitoService.getUserInfoFromIdToken(idToken);
             String userId = (String) userInfo.get("sub");
-            String location = ((Map<String, Object>) userInfo.get("address")).get("formatted").toString();
+            
+            // 안전한 사용자 정보 추출
+            String location = "정보 없음";
+            try {
+                Object addressObj = userInfo.get("address");
+                if (addressObj instanceof Map) {
+                    Map<String, Object> address = (Map<String, Object>) addressObj;
+                    Object formattedObj = address.get("formatted");
+                    if (formattedObj != null) {
+                        location = formattedObj.toString();
+                    }
+                }
+            } catch (Exception e) {
+                logger.warn("주소 정보 추출 실패, 기본값 사용: {}", e.getMessage());
+            }
+            
             String name = (String) userInfo.get("name");
+            if (name == null) {
+                name = "사용자";
+                logger.warn("이름 정보가 없어 기본값 사용");
+            }
+            
             String phoneNumber = (String) userInfo.get("phone_number");
+            if (phoneNumber == null) {
+                phoneNumber = "정보 없음";
+                logger.warn("전화번호 정보가 없어 기본값 사용");
+            }
 
             if (!userService.isUserIdDuplicate(userId)) {
                 try {
