@@ -1,0 +1,161 @@
+# =============================================================================
+# Team-FOG User Service - Production Configuration
+# AWS ECS 환경에서 Oracle DB 사용
+# =============================================================================
+
+spring:
+  application:
+    name: user-service
+  
+  # =============================================================================
+  # Oracle Database 설정 (프로덕션)
+  # =============================================================================
+  datasource:
+    url: jdbc:oracle:thin:@${DB_HOST}:${DB_PORT}:${DB_SID}
+    driver-class-name: oracle.jdbc.OracleDriver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    
+    # HikariCP 커넥션 풀 설정
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      leak-detection-threshold: 60000
+  
+  # =============================================================================
+  # JPA 설정 (Oracle)
+  # =============================================================================
+  jpa:
+    hibernate:
+      ddl-auto: validate  # 프로덕션: 스키마 검증만
+    show-sql: false  # 프로덕션: SQL 로그 비활성화
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.OracleDialect
+        format_sql: false
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+        # Oracle 특화 설정
+        connection:
+          characterEncoding: UTF-8
+          time_zone: Asia/Seoul
+  
+  # =============================================================================
+  # H2 Console 비활성화 (프로덕션)
+  # =============================================================================
+  h2:
+    console:
+      enabled: false
+  
+  # =============================================================================
+  # Jackson 설정
+  # =============================================================================
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+    time-zone: Asia/Seoul
+
+# =============================================================================
+# 서버 설정
+# =============================================================================
+server:
+  port: 8082
+  servlet:
+    context-path: /
+  
+  # =============================================================================
+  # CORS 설정 (프로덕션)
+  # =============================================================================
+  cors:
+    allowed-origins: 
+      - "https://team-fog-frontend.com"  # 프로덕션 프론트엔드
+      - "https://api.team-fog.com"      # API Gateway
+    allowed-methods:
+      - GET
+      - POST
+      - PUT
+      - DELETE
+      - OPTIONS
+    allowed-headers:
+      - "*"
+    allow-credentials: true
+    max-age: 3600
+
+# =============================================================================
+# AWS Cognito 설정
+# =============================================================================
+aws:
+  cognito:
+    user-pool-id: ${COGNITO_USER_POOL_ID}
+    client-id: ${COGNITO_CLIENT_ID}
+    client-secret: ${COGNITO_CLIENT_SECRET}
+    domain: ${COGNITO_DOMAIN}
+    region: ap-northeast-2
+
+# =============================================================================
+# MSA 서비스 연동 설정
+# =============================================================================
+msa:
+  reservation-service:
+    url: ${RESERVATION_SERVICE_URL:http://reservation-service.internal:8080}
+  store-service:
+    url: ${STORE_SERVICE_URL:http://store-service.internal:8081}
+
+# =============================================================================
+# 로깅 설정 (프로덕션)
+# =============================================================================
+logging:
+  level:
+    root: INFO
+    com.restaurant.reservation: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/user-service.log
+    max-size: 100MB
+    max-history: 30
+
+# =============================================================================
+# Actuator 설정 (헬스체크용)
+# =============================================================================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    export:
+      cloudwatch:
+        namespace: TeamFOG/UserService
+        region: ap-northeast-2
+
+# =============================================================================
+# 캐시 설정
+# =============================================================================
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=500,expireAfterWrite=600s
+
+# =============================================================================
+# 보안 설정
+# =============================================================================
+security:
+  jwt:
+    secret: ${JWT_SECRET:your-jwt-secret-key}
+    expiration: 86400000  # 24시간

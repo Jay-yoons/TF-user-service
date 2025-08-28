@@ -1,5 +1,6 @@
 package com.restaurant.reservation.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import java.util.Map;
  * Vue.js 프론트엔드로 전환으로 인해 HTML 페이지 반환 대신 API 응답으로 변경
  */
 @RestController
+@Slf4j
 public class WebController {
 
     @Autowired
@@ -39,7 +41,7 @@ public class WebController {
         response.put("timestamp", java.time.LocalDateTime.now().toString());
         response.put("port", "8080");
         response.put("version", "2.0");
-        
+
         // 데이터베이스 연결 확인
         try (Connection connection = dataSource.getConnection()) {
             boolean isValid = connection.isValid(5);
@@ -50,7 +52,7 @@ public class WebController {
             response.put("databaseError", e.getMessage());
             log.error("=== Database connection failed: {} ===", e.getMessage());
         }
-        
+
         log.info("=== User Service Health Check Completed ===");
         return ResponseEntity.ok(response);
     }
@@ -65,21 +67,21 @@ public class WebController {
         response.put("service", "User Service");
         response.put("version", "1.0.0");
         response.put("status", "UP");
-        
+
         // 메모리 상태
         Runtime runtime = Runtime.getRuntime();
         long totalMemory = runtime.totalMemory();
         long freeMemory = runtime.freeMemory();
         long usedMemory = totalMemory - freeMemory;
-        
+
         Map<String, Object> memoryStatus = new HashMap<>();
         memoryStatus.put("total", totalMemory);
         memoryStatus.put("used", usedMemory);
         memoryStatus.put("free", freeMemory);
         memoryStatus.put("usagePercent", (double) usedMemory / totalMemory * 100);
-        
+
         response.put("memory", memoryStatus);
-        
+
         return ResponseEntity.ok(response);
     }
 

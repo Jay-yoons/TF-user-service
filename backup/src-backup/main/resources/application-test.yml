@@ -1,0 +1,125 @@
+# =============================================================================
+# Team-FOG User Service - Test Configuration
+# H2 인메모리 데이터베이스 사용 (테스트용)
+# =============================================================================
+
+spring:
+  application:
+    name: user-service
+  
+  # =============================================================================
+  # H2 Database 설정 (테스트용)
+  # =============================================================================
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+    
+    # HikariCP 커넥션 풀 설정 (테스트용)
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+  
+  # =============================================================================
+  # JPA 설정 (H2)
+  # =============================================================================
+  jpa:
+    hibernate:
+      ddl-auto: create-drop  # 테스트용: 매번 테이블 재생성
+    show-sql: true  # 테스트용: SQL 로그 활성화
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+        # H2 특화 설정
+        hbm2ddl:
+          auto: create-drop
+  
+  # =============================================================================
+  # H2 Console (테스트용) - 활성화
+  # =============================================================================
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+  
+  # =============================================================================
+  # Jackson 설정
+  # =============================================================================
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+    time-zone: Asia/Seoul
+
+# =============================================================================
+# 서버 설정
+# =============================================================================
+server:
+  port: 8082
+  servlet:
+    context-path: /
+
+# =============================================================================
+# AWS Cognito 설정 (테스트용 - 더미 모드)
+# =============================================================================
+aws:
+  cognito:
+    dummy-mode: true  # 테스트용: 실제 Cognito 대신 더미 인증 사용
+    region: ap-northeast-2
+    user-pool-id: test-user-pool-id
+    client-id: test-client-id
+    client-secret: test-client-secret
+    domain: test.auth.ap-northeast-2.amazoncognito.com
+
+# =============================================================================
+# MSA 서비스 연동 설정 (테스트용)
+# =============================================================================
+msa:
+  reservation-service:
+    url: http://localhost:8080
+  store-service:
+    url: http://localhost:8081
+
+# =============================================================================
+# 로깅 설정 (테스트용)
+# =============================================================================
+logging:
+  level:
+    root: INFO
+    com.restaurant.reservation: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+# =============================================================================
+# Actuator 설정 (테스트용)
+# =============================================================================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,env
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+  simple:
+    metrics:
+      export:
+        enabled: true
+
+
