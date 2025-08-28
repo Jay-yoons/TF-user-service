@@ -58,17 +58,21 @@ public class UserController {
     private final UserService userService;
     private final AwsCognitoService cognitoService;
     private final AwsCognitoConfig cognitoConfig;
+    private final org.springframework.security.core.userdetails.UserDetailsService userDetailsService;
     
     /**
      * 생성자 - 의존성 주입
      * @param userService 사용자 서비스
      * @param cognitoService AWS Cognito 서비스
      * @param cognitoConfig AWS Cognito 설정
+     * @param userDetailsService 사용자 상세 정보 서비스
      */
-    public UserController(UserService userService, AwsCognitoService cognitoService, AwsCognitoConfig cognitoConfig) {
+    public UserController(UserService userService, AwsCognitoService cognitoService, AwsCognitoConfig cognitoConfig,
+                         org.springframework.security.core.userdetails.UserDetailsService userDetailsService) {
         this.userService = userService;
         this.cognitoService = cognitoService;
         this.cognitoConfig = cognitoConfig;
+        this.userDetailsService = userDetailsService;
     }
 
     @GetMapping("/{id}/name")
@@ -193,6 +197,23 @@ public class UserController {
                 }
             }
 
+            // Spring Security Authentication 객체에 사용자 정보 설정
+            try {
+                org.springframework.security.core.userdetails.UserDetails userDetails = 
+                    userDetailsService.loadUserByUsername(userId);
+                
+                org.springframework.security.authentication.UsernamePasswordAuthenticationToken authentication = 
+                    new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                
+                org.springframework.security.core.context.SecurityContextHolder.getContext()
+                    .setAuthentication(authentication);
+                
+                logger.info("Spring Security 인증 정보 설정 완료: userId={}", userId);
+            } catch (Exception authError) {
+                logger.warn("Spring Security 인증 정보 설정 실패: userId={}, error={}", userId, authError.getMessage());
+            }
+            
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("accessToken", tokenResponse.get("access_token"));

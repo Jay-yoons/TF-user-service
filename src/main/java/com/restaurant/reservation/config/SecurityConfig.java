@@ -41,7 +41,7 @@ public class SecurityConfig {
                 // =============================================================================
                 // 정적 리소스 및 기본 페이지 (인증 불필요)
                 // =============================================================================
-                .requestMatchers("/", "/login", "/signup", "/register", "/h2-console/**", "/actuator/**", "/public/**", 
+                .requestMatchers("/", "/login", "/signup", "/register", "/h2-console/**", "/public/**", 
                                "/css/**", "/js/**", "/images/**", "/favicon.ico", "/.well-known/**").permitAll()
                 
                 // =============================================================================
@@ -55,7 +55,7 @@ public class SecurityConfig {
                 .requestMatchers("/login/status", "/login/logout", "/users/count", "/users", "/api/auth/**", 
                                "/api/users/login", "/api/users/login/url", "/api/users/login/callback", 
                                "/api/users/count", "/api/users/signup", "/api/users/check/**",
-                               "/api/users/dashboard/counts", "/health", "/api/reviews/{id}", "api/users/{id}/name").permitAll()
+                               "/api/users/dashboard/counts", "/health", "/health/detailed", "/health/log-test", "/api/reviews/{id}", "/api/users/{id}/name").permitAll()
                 
                 // =============================================================================
                 // MSA 연동 API (인증 불필요)
@@ -70,7 +70,7 @@ public class SecurityConfig {
                 // =============================================================================
                 // 기타 API (JWT 토큰 필요)
                 // =============================================================================
-                .requestMatchers("/api/**").authenticated()
+                .requestMatchers("/api/users/me", "/api/users/logout").authenticated()
                 
                 // =============================================================================
                 // 기타 모든 요청 (인증 필요)

@@ -47,6 +47,14 @@ public class CognitoAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         
+        // 로그인 관련 경로는 인증 필터를 건너뛰기
+        String requestURI = request.getRequestURI();
+        if (requestURI.contains("/login/url") || requestURI.contains("/login/callback") || 
+            requestURI.contains("/health") || requestURI.contains("/api/auth/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        
         try {
             String token = extractTokenFromRequest(request);
             

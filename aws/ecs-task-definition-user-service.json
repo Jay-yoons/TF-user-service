@@ -1,0 +1,83 @@
+{
+  "family": "user-service",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::YOUR_ACCOUNT_ID:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::YOUR_ACCOUNT_ID:role/user-service-task-role",
+  "containerDefinitions": [
+    {
+      "name": "user-service",
+      "image": "YOUR_ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/user-service:latest",
+      "portMappings": [
+        {
+          "containerPort": 8082,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "SPRING_PROFILES_ACTIVE",
+          "value": "prod"
+        },
+        {
+          "name": "SERVER_PORT",
+          "value": "8082"
+        },
+        {
+          "name": "DB_HOST",
+          "value": "YOUR_DB_HOST"
+        },
+        {
+          "name": "DB_PORT",
+          "value": "1521"
+        },
+        {
+          "name": "DB_SERVICE_NAME",
+          "value": "PDB_USER"
+        },
+        {
+          "name": "DB_USERNAME",
+          "value": "USER_ADMIN"
+        },
+        {
+          "name": "AWS_REGION",
+          "value": "ap-northeast-2"
+        },
+        {
+          "name": "HEALTH_CHECK_DEBUG",
+          "value": "true"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "DB_PASSWORD",
+          "valueFrom": "arn:aws:secretsmanager:ap-northeast-2:YOUR_ACCOUNT_ID:secret:user-service/db-password"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/user-service",
+          "awslogs-region": "ap-northeast-2",
+          "awslogs-stream-prefix": "ecs",
+          "awslogs-datetime-format": "%Y-%m-%d %H:%M:%S"
+        }
+      },
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "echo '=== Health Check Start ===' && date && curl -v -f http://localhost:8082/health 2>&1 && echo '=== Health Check End ===' || (echo '=== Health Check Failed ===' && exit 1)"
+        ],
+        "interval": 30,
+        "timeout": 15,
+        "retries": 3,
+        "startPeriod": 120
+      },
+      "essential": true,
+      "mountPoints": [],
+      "volumesFrom": []
+    }
+  ]
+}
