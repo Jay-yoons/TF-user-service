@@ -4,13 +4,12 @@ import com.restaurant.reservation.config.AwsCognitoConfig;
 import com.restaurant.reservation.config.JwtTokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.http.*;
+import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -94,58 +93,7 @@ public class AwsCognitoService {
             throw new RuntimeException("토큰 교환 중 오류가 발생했습니다.", e);
         }
     }
-    
-    /**
-     * 리프레시 토큰으로 액세스 토큰 갱신
-     */
-    public Map<String, Object> refreshToken(String refreshToken) {
-        try {
-            logger.info("리프레시 토큰으로 액세스 토큰 갱신 시작");
-            
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-            
-            MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-            body.add("grant_type", "refresh_token");
-            body.add("client_id", cognitoConfig.getClientId());
-            body.add("client_secret", cognitoConfig.getClientSecret());
-            body.add("refresh_token", refreshToken);
-            
-            HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
-            
-            ResponseEntity<Map> response = restTemplate.postForEntity(
-                cognitoConfig.getTokenEndpoint(), 
-                request, 
-                Map.class
-            );
-            
-            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                Map<String, Object> tokenResponse = response.getBody();
-                logger.info("토큰 갱신 성공: access_token 존재={}", tokenResponse.containsKey("access_token"));
-                return tokenResponse;
-            } else {
-                logger.error("토큰 갱신 실패: status={}", response.getStatusCode());
-                throw new RuntimeException("토큰 갱신에 실패했습니다.");
-            }
-            
-        } catch (Exception e) {
-            logger.error("토큰 갱신 중 오류 발생", e);
-            throw new RuntimeException("토큰 갱신 중 오류가 발생했습니다.", e);
-        }
-    }
-    
-    /**
-     * 로그아웃 URL 생성
-     */
-    public String generateLogoutUrl(String idToken) {
-        String logoutUrl = cognitoConfig.getLogoutEndpoint() +
-                "?client_id=" + cognitoConfig.getClientId() +
-                "&logout_uri=" + cognitoConfig.getRedirectUri() +
-                "&id_token_hint=" + idToken;
-        
-        logger.info("Cognito 로그아웃 URL 생성: {}", logoutUrl);
-        return logoutUrl;
-    }
+
     
     /**
      * 사용자 정보 조회 (ID 토큰에서)

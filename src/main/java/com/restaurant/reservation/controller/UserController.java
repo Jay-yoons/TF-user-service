@@ -1,20 +1,16 @@
 package com.restaurant.reservation.controller;
 
-import com.restaurant.reservation.dto.SignupRequestDto;
-import com.restaurant.reservation.dto.SignupResponseDto;
+import com.restaurant.reservation.config.AwsCognitoConfig;
 import com.restaurant.reservation.dto.UserInfoDto;
 import com.restaurant.reservation.entity.User;
-import com.restaurant.reservation.service.UserService;
 import com.restaurant.reservation.service.AwsCognitoService;
-import com.restaurant.reservation.config.AwsCognitoConfig;
-import com.restaurant.reservation.util.PhoneNumberUtil;
+import com.restaurant.reservation.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -323,28 +319,4 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
-
-    
-    /**
-     * 더미 데이터 생성 (개발용)
-     * 프론트엔드 테스트를 위해 비활성화
-     */
-    // @PostMapping("/dummy/data")
-    // public ResponseEntity<Map<String, Object>> createDummyData() {
-    //     // 프론트엔드 테스트를 위해 비활성화
-    //     Map<String, Object> response = new HashMap<>();
-    //     response.put("success", false);
-    //     response.put("message", "더미 데이터 생성은 비활성화되었습니다.");
-    //     
-    //     return ResponseEntity.badRequest().body(response);
-    // }
-
-
-
-
-
-
-
-
 }

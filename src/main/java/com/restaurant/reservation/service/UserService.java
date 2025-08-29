@@ -33,14 +33,10 @@ public class UserService {
     
     // 로깅을 위한 Logger 인스턴스
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
-    
     // 사용자 데이터 접근을 위한 Repository
     private final UserRepository userRepository;
     
 
-    
-
-    
     /**
      * 생성자 - 의존성 주입
      * @param userRepository 사용자 데이터 접근 객체
@@ -89,32 +85,6 @@ public class UserService {
         logger.info("회원가입 완료: userId={}", savedUser.getUserId());
         
         return savedUser;
-    }
-    
-    /**
-     * 사용자 조회 (Cognito 인증 후 사용)
-     */
-    public User getUser(String userId) {
-        logger.info("사용자 조회: userId={}", userId);
-        
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("등록되지 않은 사용자입니다."));
-        
-
-        
-        logger.info("사용자 조회 완료: userId={}", user.getUserId());
-        return user;
-    }
-    
-    /**
-     * 사용자 정보 조회
-     */
-    @Transactional(readOnly = true)
-    public User getUserInfo(String userId) {
-        logger.info("사용자 정보 조회: userId={}", userId);
-        
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
     }
     
     /**
@@ -172,27 +142,11 @@ public class UserService {
             user.setUserLocation(updateRequest.get("userLocation"));
         }
         
-
-
-        
         User updatedUser = userRepository.save(user);
         logger.info("사용자 정보 수정 완료: userId={}", updatedUser.getUserId());
         
         return updatedUser;
     }
-
-
-
-
-
-    // =============================================================================
-    // Fallback 메서드들 (뷰가 없을 때 사용)
-    // =============================================================================
-
-
-
-
-
 
 
     /**
@@ -226,7 +180,6 @@ public class UserService {
             return getMyPageFallback(userId);
         }
     }
-
 
 
     /**
