@@ -51,11 +51,14 @@ public class PhoneNumberUtil {
             return formatInternationalNumber("+82" + cleaned.substring(1));
         }
         
-        // 10자리 또는 11자리 숫자인 경우 0 추가 후 변환
+        // 10자리 또는 11자리 숫자인 경우, 0으로 시작하지 않을 때만 0 추가
         if (cleaned.length() == 10 || cleaned.length() == 11) {
-            if (!cleaned.startsWith("0")) {
-                cleaned = "0" + cleaned;
+            // 이미 0으로 시작하는 경우는 그대로 처리
+            if (cleaned.startsWith("0")) {
+                return formatInternationalNumber("+82" + cleaned.substring(1));
             }
+            // 0으로 시작하지 않는 경우에만 0 추가
+            cleaned = "0" + cleaned;
             return formatInternationalNumber("+82" + cleaned.substring(1));
         }
         
@@ -159,9 +162,16 @@ public class PhoneNumberUtil {
             // 서울 지역번호: 02-xxxx-xxxx
             return "02-" + numberPart.substring(1, 5) + "-" + numberPart.substring(5);
         } else {
-            // 기타 지역번호: 0xx-xxxx-xxxx
-            return "0" + numberPart.substring(0, 2) + "-" + 
-                   numberPart.substring(2, 6) + "-" + numberPart.substring(6);
+            // 기타 지역번호: 이미 0으로 시작하는지 확인 후 처리
+            if (numberPart.startsWith("0")) {
+                // 이미 0으로 시작하는 경우: 0xx-xxxx-xxxx
+                return numberPart.substring(0, 3) + "-" + 
+                       numberPart.substring(3, 7) + "-" + numberPart.substring(7);
+            } else {
+                // 0으로 시작하지 않는 경우: 0xx-xxxx-xxxx
+                return "0" + numberPart.substring(0, 2) + "-" + 
+                       numberPart.substring(2, 6) + "-" + numberPart.substring(6);
+            }
         }
     }
 }
