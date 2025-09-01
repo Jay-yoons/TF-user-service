@@ -12,7 +12,7 @@
       "image": "YOUR_ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/user-service:latest",
       "portMappings": [
         {
-          "containerPort": 8082,
+          "containerPort": 8080,
           "protocol": "tcp"
         }
       ],
@@ -23,7 +23,7 @@
         },
         {
           "name": "SERVER_PORT",
-          "value": "8082"
+          "value": "8080"
         },
         {
           "name": "DB_HOST",
@@ -36,6 +36,10 @@
         {
           "name": "DB_SERVICE_NAME",
           "value": "PDB_USER"
+        },
+        {
+          "name": "STDB_HOST",
+          "value": "YOUR_STDB_HOST"
         },
         {
           "name": "DB_USERNAME",
@@ -68,7 +72,7 @@
       "healthCheck": {
         "command": [
           "CMD-SHELL",
-          "echo '=== Health Check Start ===' && date && curl -v -f http://localhost:8082/health 2>&1 && echo '=== Health Check End ===' || (echo '=== Health Check Failed ===' && exit 1)"
+          "echo '=== Health Check Start ===' && date && curl -v -f http://localhost:8080/health 2>&1 && echo '=== Health Check End ===' || (echo '=== Health Check Failed ===' && exit 1)"
         ],
         "interval": 30,
         "timeout": 15,
