@@ -144,23 +144,36 @@ public class UserController {
     @PostMapping("/login/callback")
     public ResponseEntity<Map<String, Object>> handleCallback(@RequestBody Map<String, String> callbackRequest) {
         try {
+            logger.info("=== Cognito 콜백 처리 시작 ===");
+            logger.info("요청 데이터: {}", callbackRequest);
+            
             String authorizationCode = callbackRequest.get("code");
             String state = callbackRequest.get("state");
             
+            logger.info("인증 코드: {}", authorizationCode);
+            logger.info("상태 값: {}", state);
+            
             if (authorizationCode == null) {
-                logger.warn("인증 코드가 누락되었습니다");
+                logger.error("인증 코드가 누락되었습니다");
                 return ResponseEntity.badRequest().build();
             }
             
             logger.info("Cognito 콜백 처리: code={}, state={}", authorizationCode, state);
             
             // 인증 코드로 토큰 교환
+            logger.info("토큰 교환 시작...");
             Map<String, Object> tokenResponse = cognitoService.exchangeCodeForToken(authorizationCode);
+            logger.info("토큰 교환 완료: {}", tokenResponse.keySet());
             
             // 사용자 정보 추출
             String idToken = (String) tokenResponse.get("id_token");
+            logger.info("ID 토큰 추출: {}", idToken != null ? "성공" : "실패");
+            
             Map<String, Object> userInfo = cognitoService.getUserInfoFromIdToken(idToken);
+            logger.info("사용자 정보 추출: {}", userInfo.keySet());
+            
             String userId = (String) userInfo.get("sub");
+            logger.info("사용자 ID 추출: {}", userId);
             
             // 안전한 사용자 정보 추출
             String location = "정보 없음";
@@ -189,24 +202,29 @@ public class UserController {
                 logger.warn("전화번호 정보가 없어 기본값 사용");
             }
 
+            logger.info("사용자 중복 확인: userId={}", userId);
             if (!userService.isUserIdDuplicate(userId)) {
                 try {
-                    logger.info("회원가입 요청");
+                    logger.info("회원가입 요청: userId={}, name={}, phone={}, location={}", userId, name, phoneNumber, location);
 
                     User user = userService.signup(userId, name, phoneNumber, location);
 
                     logger.info("회원가입 완료: userId={}", user.getUserId());
 
                 } catch (Exception e) {
-                    logger.error("회원가입 중 오류 발생", e);
+                    logger.error("회원가입 중 오류 발생: userId={}", userId, e);
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                 }
+            } else {
+                logger.info("기존 사용자 확인: userId={}", userId);
             }
 
             // Spring Security Authentication 객체에 사용자 정보 설정
+            logger.info("Spring Security 인증 정보 설정 시작: userId={}", userId);
             try {
                 org.springframework.security.core.userdetails.UserDetails userDetails = 
                     userDetailsService.loadUserByUsername(userId);
+                logger.info("사용자 상세 정보 로드 완료: userId={}", userId);
                 
                 org.springframework.security.authentication.UsernamePasswordAuthenticationToken authentication = 
                     new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
@@ -217,9 +235,10 @@ public class UserController {
                 
                 logger.info("Spring Security 인증 정보 설정 완료: userId={}", userId);
             } catch (Exception authError) {
-                logger.warn("Spring Security 인증 정보 설정 실패: userId={}, error={}", userId, authError.getMessage());
+                logger.error("Spring Security 인증 정보 설정 실패: userId={}, error={}", userId, authError.getMessage(), authError);
             }
             
+            logger.info("응답 데이터 생성 시작");
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("accessToken", tokenResponse.get("access_token"));
@@ -231,15 +250,20 @@ public class UserController {
             response.put("message", "Cognito 로그인 성공");
             
             logger.info("Cognito 로그인 완료: userId={}", userInfo.get("sub"));
+            logger.info("=== Cognito 콜백 처리 성공 완료 ===");
             return ResponseEntity.ok(response);
             
         } catch (Exception e) {
-            logger.error("Cognito 콜백 처리 중 오류 발생", e);
+            logger.error("=== Cognito 콜백 처리 중 오류 발생 ===");
+            logger.error("예외 타입: {}", e.getClass().getSimpleName());
+            logger.error("예외 메시지: {}", e.getMessage());
+            logger.error("예외 상세 정보:", e);
             
             Map<String, Object> response = new HashMap<>();
             response.put("success", false);
             response.put("message", e.getMessage());
             
+            logger.error("=== Cognito 콜백 처리 실패 완료 ===");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
     }

@@ -59,7 +59,11 @@ public class AwsCognitoService {
      */
     public Map<String, Object> exchangeCodeForToken(String authorizationCode) {
         try {
-            logger.info("인증 코드로 토큰 교환 시작: code={}", authorizationCode);
+            logger.info("=== 토큰 교환 시작 ===");
+            logger.info("인증 코드: {}", authorizationCode);
+            logger.info("토큰 엔드포인트: {}", cognitoConfig.getTokenEndpoint());
+            logger.info("클라이언트 ID: {}", cognitoConfig.getClientId());
+            logger.info("리다이렉트 URI: {}", cognitoConfig.getRedirectUri());
             
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -71,25 +75,36 @@ public class AwsCognitoService {
             body.add("code", authorizationCode);
             body.add("redirect_uri", cognitoConfig.getRedirectUri());
             
+            logger.info("요청 바디 생성 완료");
+            
             HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
             
+            logger.info("Cognito 토큰 엔드포인트로 요청 전송...");
             ResponseEntity<Map> response = restTemplate.postForEntity(
                 cognitoConfig.getTokenEndpoint(), 
                 request, 
                 Map.class
             );
             
+            logger.info("Cognito 응답 수신: status={}", response.getStatusCode());
+            
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
                 Map<String, Object> tokenResponse = response.getBody();
-                logger.info("토큰 교환 성공: access_token 존재={}", tokenResponse.containsKey("access_token"));
+                logger.info("토큰 교환 성공: access_token 존재={}, id_token 존재={}", 
+                    tokenResponse.containsKey("access_token"), 
+                    tokenResponse.containsKey("id_token"));
+                logger.info("=== 토큰 교환 성공 완료 ===");
                 return tokenResponse;
             } else {
-                logger.error("토큰 교환 실패: status={}", response.getStatusCode());
+                logger.error("토큰 교환 실패: status={}, body={}", response.getStatusCode(), response.getBody());
                 throw new RuntimeException("토큰 교환에 실패했습니다.");
             }
             
         } catch (Exception e) {
-            logger.error("토큰 교환 중 오류 발생", e);
+            logger.error("=== 토큰 교환 중 오류 발생 ===");
+            logger.error("예외 타입: {}", e.getClass().getSimpleName());
+            logger.error("예외 메시지: {}", e.getMessage());
+            logger.error("예외 상세 정보:", e);
             throw new RuntimeException("토큰 교환 중 오류가 발생했습니다.", e);
         }
     }
@@ -100,16 +115,27 @@ public class AwsCognitoService {
      */
     public Map<String, Object> getUserInfoFromIdToken(String idToken) {
         try {
-            logger.info("ID 토큰에서 사용자 정보 조회");
+            logger.info("=== ID 토큰에서 사용자 정보 조회 시작 ===");
+            logger.info("ID 토큰: {}", idToken != null ? "존재함" : "null");
+            
+            if (idToken == null) {
+                logger.error("ID 토큰이 null입니다");
+                throw new RuntimeException("ID 토큰이 null입니다");
+            }
             
             // JWT 토큰에서 사용자 정보 추출
+            logger.info("JWT 토큰에서 사용자 정보 추출 시작...");
             Map<String, Object> userInfo = jwtTokenUtil.getUserInfoFromToken(idToken);
             
-            logger.debug("사용자 정보 추출 성공: sub={}", userInfo.get("sub"));
+            logger.info("사용자 정보 추출 성공: sub={}, keys={}", userInfo.get("sub"), userInfo.keySet());
+            logger.info("=== ID 토큰에서 사용자 정보 조회 완료 ===");
             return userInfo;
             
         } catch (Exception e) {
-            logger.error("사용자 정보 조회 중 오류 발생", e);
+            logger.error("=== 사용자 정보 조회 중 오류 발생 ===");
+            logger.error("예외 타입: {}", e.getClass().getSimpleName());
+            logger.error("예외 메시지: {}", e.getMessage());
+            logger.error("예외 상세 정보:", e);
             throw new RuntimeException("사용자 정보 조회 중 오류가 발생했습니다.", e);
         }
     }

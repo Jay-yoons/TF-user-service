@@ -100,21 +100,39 @@ public class JwtTokenUtil {
      */
     public Map<String, Object> getUserInfoFromToken(String token) {
         try {
+            logger.info("=== JWT 토큰에서 사용자 정보 추출 시작 ===");
+            logger.info("토큰 길이: {}", token != null ? token.length() : "null");
+            
+            if (token == null || token.isEmpty()) {
+                logger.error("토큰이 null이거나 비어있습니다");
+                throw new RuntimeException("토큰이 null이거나 비어있습니다");
+            }
+            
             // JWT 토큰 디코딩
+            logger.info("JWT 토큰 디코딩 시작...");
             DecodedJWT decodedJWT = JWT.decode(token);
+            logger.info("JWT 토큰 디코딩 완료");
             
             // 페이로드에서 사용자 정보 추출
+            logger.info("페이로드 추출 시작...");
             String payload = decodedJWT.getPayload();
+            logger.info("페이로드 추출 완료: 길이={}", payload.length());
+            
             String decodedPayload = new String(Base64.getUrlDecoder().decode(payload));
+            logger.info("페이로드 디코딩 완료: 길이={}", decodedPayload.length());
             
             @SuppressWarnings("unchecked")
             Map<String, Object> userInfo = objectMapper.readValue(decodedPayload, Map.class);
             
-            logger.debug("JWT 토큰에서 사용자 정보 추출 성공: sub={}", userInfo.get("sub"));
+            logger.info("사용자 정보 파싱 완료: sub={}, keys={}", userInfo.get("sub"), userInfo.keySet());
+            logger.info("=== JWT 토큰에서 사용자 정보 추출 완료 ===");
             return userInfo;
             
         } catch (Exception e) {
-            logger.error("JWT 토큰에서 사용자 정보 추출 중 오류 발생", e);
+            logger.error("=== JWT 토큰에서 사용자 정보 추출 중 오류 발생 ===");
+            logger.error("예외 타입: {}", e.getClass().getSimpleName());
+            logger.error("예외 메시지: {}", e.getMessage());
+            logger.error("예외 상세 정보:", e);
             throw new RuntimeException("사용자 정보 추출 중 오류가 발생했습니다.", e);
         }
     }
