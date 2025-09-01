@@ -8,10 +8,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-      dialect: org.hibernate.dialect.OracleDialect
+      dialect: org.hibernate.dialect.Oracle12cDialect
     show-sql: true
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.Oracle12cDialect
         format_sql: true
         connection-test-query: SELECT 1 FROM DUAL
         connection-timeout: 30000
@@ -35,6 +36,14 @@ spring:
     driver-class-name: oracle.jdbc.OracleDriver
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+    hikari:
+      connection-test-query: SELECT 1 FROM DUAL
+      connection-timeout: 30000
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      leak-detection-threshold: 60000
   mvc:
     hiddenmethod:
       filter:
@@ -47,11 +56,14 @@ logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.hibernate.engine.jdbc.env.spi.JdbcEnvironment: DEBUG
+    org.hibernate.engine.jdbc.spi.SqlExceptionHelper: DEBUG
     com.restaurant.reservation: DEBUG
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
     org.springframework.boot.autoconfigure: INFO
     org.springframework.boot.actuate: INFO
+    org.springframework.boot.autoconfigure.jdbc: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
 
