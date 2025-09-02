@@ -9,6 +9,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build-and-push:
@@ -22,7 +25,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: arn:aws:iam::733995297457:role/GitHub_Actions
+          role-to-assume: arn:aws:iam::892387177770:role/GitHub_Actions
           aws-region: ap-northeast-2
 
       - name: Login to Amazon ECR
@@ -41,3 +44,28 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Update ECS Task Definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: user
+          image: ${{ steps.login-ecr.outputs.registry }}/user-service:${{ steps.vars.outputs.current_time }}
+
+      - name: Deploy to Amazon ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: user-service
+          cluster: fog-cluster
+          wait-for-service-stability: true
+
+      - name: Verify deployment
+        run: |
+          echo "Waiting for service to be stable..."
+          aws ecs wait services-stable \
+            --cluster fog-cluster \
+            --services user-service \
+            --region ap-northeast-2
+          echo "Deployment completed successfully!"
