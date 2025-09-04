@@ -13,9 +13,9 @@ COPY --from=builder /app/build/libs/*.jar /app.jar
 # Expose port
 EXPOSE 8080
 
-# 3. 헬스 체크 설정 추가 (복합 체크)
-HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
-  CMD curl -sf http://localhost:8080/health/elb || exit 1
+# 3. 헬스 체크 설정 추가
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+  CMD curl -sf http://localhost:8080/health || exit 1
 
 # 4. 컨테이너 실행 명령어
 ENTRYPOINT ["java", "-jar", "/app.jar"]

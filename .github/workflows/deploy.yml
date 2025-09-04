@@ -1,38 +1,36 @@
-name: CI/CD Pipeline with OIDC
+name: User Service CI/CD Pipeline with OIDC
 
-# OIDC 토큰을 생성하기 위한 권한 설정
 permissions:
-  id-token: write # 이 권한은 필수입니다.
+  id-token: write
   contents: read
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    env:
-      TZ: Asia/Seoul
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::733995297457:role/GitHub_Actions
           aws-region: ap-northeast-2
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Set image tag with date and time
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Get current timestamp
         id: vars
         run: echo "current_time=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
 
@@ -43,29 +41,139 @@ jobs:
           IMAGE_TAG: ${{ steps.vars.outputs.current_time }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
-      - name: Update ECS Task Definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          task-definition: task-definition.json
-          container-name: user
-          image: ${{ steps.login-ecr.outputs.registry }}/user-service:${{ steps.vars.outputs.current_time }}
+          role-to-assume: arn:aws:iam::733995297457:role/GitHub_Actions
+          aws-region: ap-northeast-2
 
-      - name: Deploy to Amazon ECS
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: user-service
-          cluster: fog-cluster
-          wait-for-service-stability: true
+      - name: Install jq
+        run: sudo apt-get install -y jq
 
-      - name: Verify deployment
+      - name: Get current task definition ARN
+        id: get-task-def
         run: |
-          echo "Waiting for service to be stable..."
+          CURRENT_TASK_DEF=$(aws ecs describe-services \
+            --cluster fog-cluster \
+            --services user-service \
+            --region ap-northeast-2 \
+            --query 'services[0].taskDefinition' \
+            --output text)
+          echo "current_task_def=$CURRENT_TASK_DEF" >> $GITHUB_OUTPUT
+          echo "🔍 Current task definition: $CURRENT_TASK_DEF"
+
+      - name: Describe current task definition
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition ${{ steps.get-task-def.outputs.current_task_def }} \
+            --region ap-northeast-2 > current-task-definition.json
+          echo "📄 Current task definition saved to current-task-definition.json"
+
+      - name: Create new task definition
+        run: |
+          jq '.taskDefinition | {
+            family: .family,
+            executionRoleArn: .executionRoleArn,
+            taskRoleArn: .taskRoleArn,
+            networkMode: .networkMode,
+            requiresCompatibilities: .requiresCompatibilities,
+            cpu: .cpu,
+            memory: .memory,
+            containerDefinitions: .containerDefinitions,
+            volumes: .volumes,
+            placementConstraints: .placementConstraints
+          } | with_entries(select(.value != null))' \
+          current-task-definition.json > new-task-definition.json
+          
+          echo "📄 New task definition created: new-task-definition.json"
+
+      - name: Update image in task definition
+        run: |
+          jq '.containerDefinitions[0].image = "733995297457.dkr.ecr.ap-northeast-2.amazonaws.com/user-service:latest"' \
+          new-task-definition.json > temp.json && mv temp.json new-task-definition.json
+          
+          echo "🖼️ Updated image to :latest tag"
+
+      - name: Register new task definition
+        id: register-task
+        run: |
+          NEW_TASK_DEF_ARN=$(aws ecs register-task-definition \
+            --cli-input-json file://new-task-definition.json \
+            --region ap-northeast-2 \
+            --query 'taskDefinition.taskDefinitionArn' \
+            --output text)
+          
+          echo "NEW_TASK_DEF_ARN=$NEW_TASK_DEF_ARN" >> $GITHUB_OUTPUT
+          echo "🔍 NEW_TASK_DEF_ARN value: '$NEW_TASK_DEF_ARN'"
+          echo "🔍 Variable length: ${#NEW_TASK_DEF_ARN}"
+          
+          if [ -z "$NEW_TASK_DEF_ARN" ]; then
+            echo "❌ Error: NEW_TASK_DEF_ARN is empty!"
+            exit 1
+          fi
+          
+          echo "✅ New task definition registered: $NEW_TASK_DEF_ARN"
+
+      - name: Update ECS service
+        run: |
+          aws ecs update-service \
+            --cluster fog-cluster \
+            --service user-service \
+            --region ap-northeast-2 \
+            --task-definition "${{ steps.register-task.outputs.NEW_TASK_DEF_ARN }}"
+          
+          echo "🔄 ECS service updated with new task definition"
+
+      - name: Wait for service stability
+        run: |
           aws ecs wait services-stable \
             --cluster fog-cluster \
             --services user-service \
             --region ap-northeast-2
-          echo "Deployment completed successfully!"
+          
+          echo "✅ Service is now stable"
+
+      - name: Verify deployment
+        run: |
+          SERVICE_STATUS=$(aws ecs describe-services \
+            --cluster fog-cluster \
+            --services user-service \
+            --region ap-northeast-2 \
+            --query 'services[0].status' \
+            --output text)
+          
+          RUNNING_COUNT=$(aws ecs describe-services \
+            --cluster fog-cluster \
+            --services user-service \
+            --region ap-northeast-2 \
+            --query 'services[0].runningCount' \
+            --output text)
+          
+          DESIRED_COUNT=$(aws ecs describe-services \
+            --cluster fog-cluster \
+            --services user-service \
+            --region ap-northeast-2 \
+            --query 'services[0].desiredCount' \
+            --output text)
+          
+          echo "📊 Service Status: $SERVICE_STATUS"
+          echo "📊 Running Count: $RUNNING_COUNT"
+          echo "📊 Desired Count: $DESIRED_COUNT"
+          
+          if [ "$SERVICE_STATUS" = "ACTIVE" ] && [ "$RUNNING_COUNT" -eq "$DESIRED_COUNT" ]; then
+            echo "✅ Deployment successful!"
+          else
+            echo "❌ Deployment verification failed"
+            exit 1
+          fi
