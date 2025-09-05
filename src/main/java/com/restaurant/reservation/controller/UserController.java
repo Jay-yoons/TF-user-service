@@ -122,24 +122,30 @@ public class UserController {
     private String extractUserIdFromJwtToken() {
         try {
             // Authorization 헤더에서 JWT 토큰 추출
-            jakarta.servlet.http.HttpServletRequest request = 
-                ((org.springframework.web.context.request.RequestAttributes) 
-                    org.springframework.web.context.request.RequestContextHolder.getRequestAttributes())
-                    .getRequest();
+            org.springframework.web.context.request.RequestAttributes requestAttributes = 
+                org.springframework.web.context.request.RequestContextHolder.getRequestAttributes();
             
-            String authHeader = request.getHeader("Authorization");
-            if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                String token = authHeader.substring(7);
-                logger.info("JWT 토큰에서 사용자 ID 추출 시도");
+            if (requestAttributes instanceof org.springframework.web.context.request.ServletRequestAttributes) {
+                jakarta.servlet.http.HttpServletRequest request = 
+                    ((org.springframework.web.context.request.ServletRequestAttributes) requestAttributes).getRequest();
                 
-                // JWT 토큰에서 사용자 정보 추출 (간단한 방법)
-                Map<String, Object> userInfo = cognitoService.getUserInfoFromIdToken(token);
-                String userId = (String) userInfo.get("sub");
-                logger.info("JWT 토큰에서 사용자 ID 추출 성공: {}", userId);
-                return userId;
+                String authHeader = request.getHeader("Authorization");
+                if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                    String token = authHeader.substring(7);
+                    logger.info("JWT 토큰에서 사용자 ID 추출 시도");
+                    
+                    // JWT 토큰에서 사용자 정보 추출 (간단한 방법)
+                    Map<String, Object> userInfo = cognitoService.getUserInfoFromIdToken(token);
+                    String userId = (String) userInfo.get("sub");
+                    logger.info("JWT 토큰에서 사용자 ID 추출 성공: {}", userId);
+                    return userId;
+                }
+                
+                logger.warn("Authorization 헤더가 없거나 Bearer 토큰이 아님");
+                return null;
             }
             
-            logger.warn("Authorization 헤더가 없거나 Bearer 토큰이 아님");
+            logger.warn("ServletRequestAttributes를 가져올 수 없음");
             return null;
             
         } catch (Exception e) {
