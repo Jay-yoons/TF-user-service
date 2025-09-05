@@ -63,6 +63,7 @@ logging:
 
 aws:
   cognito:
+    region: ${AWS_REGION}
     user-pool-id: ${COGNITO_USER_POOL_ID}
     client-id: ${COGNITO_CLIENT_ID}
     client-secret: ${COGNITO_CLIENT_SECRET}
