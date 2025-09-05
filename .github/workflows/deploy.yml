@@ -198,8 +198,6 @@ jobs:
           # 무효화 완료 대기 (최대 10분)
           aws cloudfront wait invalidation-completed \
             --distribution-id $DISTRIBUTION_ID \
-            --id $INVALIDATION_ID \
-            --max-attempts 60 \
-            --delay 10
+            --id $INVALIDATION_ID
           
           echo "✅ CloudFront cache invalidation completed!"
