@@ -9,7 +9,7 @@
   "containerDefinitions": [
     {
       "name": "user",
-              "image": "733995297457.dkr.ecr.ap-northeast-2.amazonaws.com/user-service:latest",
+      "image": "733995297457.dkr.ecr.ap-northeast-2.amazonaws.com/user-service:latest",
       "portMappings": [
         {
           "containerPort": 8080,
@@ -21,6 +21,30 @@
         {
           "name": "SPRING_PROFILES_ACTIVE",
           "value": "prod"
+        },
+        {
+          "name": "DB_HOST",
+          "value": "10.0.13.41"
+        },
+        {
+          "name": "DB_PORT",
+          "value": "1521"
+        },
+        {
+          "name": "DB_SERVICE_NAME",
+          "value": "PDB_USER"
+        },
+        {
+          "name": "STDB_HOST",
+          "value": "10.0.13.76"
+        },
+        {
+          "name": "DB_USERNAME",
+          "value": "USER_ADMIN"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "value": "oracle"
         }
       ],
       "healthCheck": {
