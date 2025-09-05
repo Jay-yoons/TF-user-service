@@ -72,6 +72,9 @@ aws:
     token-endpoint: ${COGNITO_TOKEN_ENDPOINT}
     logout-endpoint: ${COGNITO_LOGOUT_ENDPOINT}
     jwks-url: ${COGNITO_JWKS_URL}
+    response-type: code
+    scope: email openid phone profile
+    grant-type: authorization_code
     jwt:
       secret: ${JWT_SECRET_KEY}
       expiration: 3600000
