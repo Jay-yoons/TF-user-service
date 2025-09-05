@@ -99,7 +99,6 @@ public class UserController {
      */
     private String getCurrentUserId() {
         try {
-            // Spring Security 인증 시도
             org.springframework.security.core.Authentication authentication = 
                 org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
             
@@ -109,9 +108,8 @@ public class UserController {
                 return authentication.getName();
             }
             
-            // Spring Security 실패 시 JWT 토큰에서 직접 추출
-            logger.warn("Spring Security 인증 실패, JWT 토큰에서 직접 추출 시도");
-            return extractUserIdFromJwtToken();
+            logger.warn("Spring Security 인증 실패");
+            return null;
             
         } catch (Exception e) {
             logger.error("현재 사용자 ID 조회 중 오류 발생", e);

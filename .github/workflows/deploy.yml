@@ -177,3 +177,29 @@ jobs:
             echo "❌ Deployment verification failed"
             exit 1
           fi
+
+      - name: CloudFront Cache Invalidation
+        run: |
+          echo "🔄 Starting CloudFront cache invalidation..."
+          
+          # CloudFront Distribution ID
+          DISTRIBUTION_ID="E3NPLCVDB66SWW"
+          
+          # 전체 경로 무효화 (수동과 동일)
+          INVALIDATION_ID=$(aws cloudfront create-invalidation \
+            --distribution-id $DISTRIBUTION_ID \
+            --paths "/*" \
+            --query 'Invalidation.Id' \
+            --output text)
+          
+          echo "📋 Invalidation ID: $INVALIDATION_ID"
+          echo "⏳ Waiting for invalidation to complete..."
+          
+          # 무효화 완료 대기 (최대 10분)
+          aws cloudfront wait invalidation-completed \
+            --distribution-id $DISTRIBUTION_ID \
+            --id $INVALIDATION_ID \
+            --max-attempts 60 \
+            --delay 10
+          
+          echo "✅ CloudFront cache invalidation completed!"

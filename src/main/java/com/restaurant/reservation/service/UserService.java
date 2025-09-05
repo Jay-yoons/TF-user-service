@@ -165,9 +165,15 @@ public class UserService {
             Map<String, Object> userInfo = new HashMap<>();
             if (user != null) {
                 userInfo.put("userId", user.getUserId());
-                userInfo.put("userName", user.getUserName());
-                userInfo.put("phoneNumber", user.getPhoneNumber());
-                userInfo.put("userLocation", user.getUserLocation());
+                userInfo.put("userName", user.getUserName() != null ? user.getUserName() : "정보 없음");
+                userInfo.put("phoneNumber", user.getPhoneNumber() != null ? user.getPhoneNumber() : "정보 없음");
+                userInfo.put("userLocation", user.getUserLocation() != null ? user.getUserLocation() : "정보 없음");
+            } else {
+                // 사용자가 없을 때 기본값 설정
+                userInfo.put("userId", userId);
+                userInfo.put("userName", "정보 없음");
+                userInfo.put("phoneNumber", "정보 없음");
+                userInfo.put("userLocation", "정보 없음");
             }
             myPage.put("userInfo", userInfo);
             
@@ -193,9 +199,15 @@ public class UserService {
         Map<String, Object> userInfo = new HashMap<>();
         if (user != null) {
             userInfo.put("userId", user.getUserId());
-            userInfo.put("userName", user.getUserName());
-            userInfo.put("phoneNumber", user.getPhoneNumber());
-            userInfo.put("userLocation", user.getUserLocation());
+            userInfo.put("userName", user.getUserName() != null ? user.getUserName() : "정보 없음");
+            userInfo.put("phoneNumber", user.getPhoneNumber() != null ? user.getPhoneNumber() : "정보 없음");
+            userInfo.put("userLocation", user.getUserLocation() != null ? user.getUserLocation() : "정보 없음");
+        } else {
+            // 사용자가 없을 때 기본값 설정
+            userInfo.put("userId", userId);
+            userInfo.put("userName", "정보 없음");
+            userInfo.put("phoneNumber", "정보 없음");
+            userInfo.put("userLocation", "정보 없음");
         }
         myPage.put("userInfo", userInfo);
         
