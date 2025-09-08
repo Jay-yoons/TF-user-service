@@ -251,7 +251,22 @@ public class UserController {
 
                 } catch (Exception e) {
                     logger.error("회원가입 중 오류 발생: userId={}", userId, e);
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                    
+                    // 중복 전화번호 에러인 경우 400 Bad Request로 처리
+                    if (e.getMessage() != null && e.getMessage().contains("이미 등록된 전화번호")) {
+                        Map<String, Object> errorResponse = new HashMap<>();
+                        errorResponse.put("success", false);
+                        errorResponse.put("error", "DUPLICATE_PHONE");
+                        errorResponse.put("message", "이미 등록된 전화번호입니다. 다른 전화번호를 사용해주세요.");
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+                    }
+                    
+                    // 기타 에러는 500 Internal Server Error
+                    Map<String, Object> errorResponse = new HashMap<>();
+                    errorResponse.put("success", false);
+                    errorResponse.put("error", "SIGNUP_FAILED");
+                    errorResponse.put("message", "회원가입 중 오류가 발생했습니다.");
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
                 }
             } else {
                 logger.info("기존 사용자 확인: userId={}", userId);
