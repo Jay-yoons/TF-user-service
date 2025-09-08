@@ -262,11 +262,18 @@ public class UserController {
                         
                         // Cognito에서 생성된 사용자 삭제 (반쪽 가입 방지)
                         try {
-                            boolean deleteSuccess = cognitoService.deleteCognitoUser(userId);
-                            if (deleteSuccess) {
-                                logger.info("중복 전화번호 에러로 인한 Cognito 사용자 삭제 성공: userId={}", userId);
+                            // JWT 토큰에서 cognito:username 추출 (실제 Cognito 사용자명)
+                            String cognitoUsername = (String) userInfo.get("cognito:username");
+                            if (cognitoUsername != null) {
+                                logger.info("Cognito 사용자명으로 삭제 시도: cognitoUsername={}", cognitoUsername);
+                                boolean deleteSuccess = cognitoService.deleteCognitoUser(cognitoUsername);
+                                if (deleteSuccess) {
+                                    logger.info("중복 전화번호 에러로 인한 Cognito 사용자 삭제 성공: cognitoUsername={}", cognitoUsername);
+                                } else {
+                                    logger.warn("중복 전화번호 에러로 인한 Cognito 사용자 삭제 실패: cognitoUsername={}", cognitoUsername);
+                                }
                             } else {
-                                logger.warn("중복 전화번호 에러로 인한 Cognito 사용자 삭제 실패: userId={}", userId);
+                                logger.warn("cognito:username이 없어 삭제할 수 없음: userId={}", userId);
                             }
                         } catch (Exception deleteException) {
                             logger.error("Cognito 사용자 삭제 중 예외 발생: userId={}", userId, deleteException);
