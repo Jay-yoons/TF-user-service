@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminDeleteUserRequest;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminDeleteUserResponse;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.CognitoIdentityProviderException;
 
 import java.util.Map;
 
@@ -32,11 +36,13 @@ public class AwsCognitoService {
     private final AwsCognitoConfig cognitoConfig;
     private final RestTemplate restTemplate;
     private final JwtTokenUtil jwtTokenUtil;
+    private final CognitoIdentityProviderClient cognitoClient;
     
     public AwsCognitoService(AwsCognitoConfig cognitoConfig, JwtTokenUtil jwtTokenUtil) {
         this.cognitoConfig = cognitoConfig;
         this.jwtTokenUtil = jwtTokenUtil;
         this.restTemplate = new RestTemplate();
+        this.cognitoClient = CognitoIdentityProviderClient.builder().build();
     }
     
     /**
@@ -160,6 +166,35 @@ public class AwsCognitoService {
             
         } catch (Exception e) {
             logger.error("토큰 검증 중 오류 발생", e);
+            return false;
+        }
+    }
+    
+    /**
+     * Cognito 사용자 삭제 (Admin API 사용)
+     */
+    public boolean deleteCognitoUser(String userId) {
+        try {
+            logger.info("=== Cognito 사용자 삭제 시작 ===");
+            logger.info("삭제할 사용자 ID: {}", userId);
+            logger.info("사용자 풀 ID: {}", cognitoConfig.getUserPoolId());
+            
+            AdminDeleteUserRequest deleteRequest = AdminDeleteUserRequest.builder()
+                    .userPoolId(cognitoConfig.getUserPoolId())
+                    .username(userId)
+                    .build();
+            
+            AdminDeleteUserResponse deleteResponse = cognitoClient.adminDeleteUser(deleteRequest);
+            
+            logger.info("Cognito 사용자 삭제 성공: userId={}", userId);
+            logger.info("=== Cognito 사용자 삭제 완료 ===");
+            return true;
+            
+        } catch (CognitoIdentityProviderException e) {
+            logger.error("Cognito 사용자 삭제 실패: userId={}, error={}", userId, e.awsErrorDetails().errorMessage());
+            return false;
+        } catch (Exception e) {
+            logger.error("Cognito 사용자 삭제 중 예외 발생: userId={}", userId, e);
             return false;
         }
     }

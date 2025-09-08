@@ -254,6 +254,20 @@ public class UserController {
                     
                     // 중복 전화번호 에러인 경우 400 Bad Request로 처리
                     if (e.getMessage() != null && e.getMessage().contains("이미 등록된 전화번호")) {
+                        logger.warn("중복 전화번호로 인한 회원가입 실패 - Cognito 사용자 삭제 시도: userId={}", userId);
+                        
+                        // Cognito에서 생성된 사용자 삭제 (반쪽 가입 방지)
+                        try {
+                            boolean deleteSuccess = cognitoService.deleteCognitoUser(userId);
+                            if (deleteSuccess) {
+                                logger.info("중복 전화번호 에러로 인한 Cognito 사용자 삭제 성공: userId={}", userId);
+                            } else {
+                                logger.warn("중복 전화번호 에러로 인한 Cognito 사용자 삭제 실패: userId={}", userId);
+                            }
+                        } catch (Exception deleteException) {
+                            logger.error("Cognito 사용자 삭제 중 예외 발생: userId={}", userId, deleteException);
+                        }
+                        
                         Map<String, Object> errorResponse = new HashMap<>();
                         errorResponse.put("success", false);
                         errorResponse.put("error", "DUPLICATE_PHONE");
