@@ -182,14 +182,18 @@ public class UserController {
     @PostMapping("/login/callback")
     public ResponseEntity<Map<String, Object>> handleCallback(@RequestBody Map<String, String> callbackRequest) {
         try {
-            logger.info("=== Cognito 콜백 처리 시작 ===");
-            logger.info("요청 데이터: {}", callbackRequest);
+            logger.error("=== Cognito 콜백 처리 시작 (ERROR 레벨) ===");
+            logger.error("요청 데이터: {}", callbackRequest);
+            System.out.println("=== Cognito 콜백 처리 시작 (System.out) ===");
+            System.out.println("요청 데이터: " + callbackRequest);
             
             String authorizationCode = callbackRequest.get("code");
             String state = callbackRequest.get("state");
             
-            logger.info("인증 코드: {}", authorizationCode);
-            logger.info("상태 값: {}", state);
+            logger.error("인증 코드: {}", authorizationCode);
+            logger.error("상태 값: {}", state);
+            System.out.println("인증 코드: " + authorizationCode);
+            System.out.println("상태 값: " + state);
             
             if (authorizationCode == null) {
                 logger.error("인증 코드가 누락되었습니다");
