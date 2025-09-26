@@ -39,7 +39,8 @@ RUN chown appuser:appuser /app/app.jar
 
 # Spring Boot용 디렉토리 미리 생성 (읽기 전용 파일시스템 대비)
 RUN mkdir -p /app/tmp /app/tomcat /writable/temp && \
-    chown -R appuser:appuser /app /writable
+    chown -R appuser:appuser /app /writable && \
+    chmod -R 777 /writable/temp
 
 # 비루트 사용자로 전환
 USER appuser
