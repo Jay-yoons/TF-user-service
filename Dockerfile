@@ -3,19 +3,13 @@
 # =============================================================================
 
 # 1. 빌드 스테이지 (보안 강화)
-FROM openjdk:17-jdk-slim AS builder
+FROM eclipse-temurin:17-jdk-alpine AS builder
 
 # 보안 업데이트 및 취약점 패치
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y \
-    zlib1g=1:1.2.11.dfsg-2+deb11u2 \
-    libtasn1-6=4.16.0-2+deb11u1 \
-    libpcre2-8-0=10.36-2+deb11u1 \
-    openssl=1.1.1n-0+deb11u4 \
-    curl && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN apk update && \
+    apk upgrade && \
+    apk add --no-cache \
+    curl
 
 WORKDIR /app
 COPY . .
@@ -29,10 +23,6 @@ FROM eclipse-temurin:17-jre-alpine
 RUN apk update && \
     apk upgrade && \
     apk add --no-cache \
-    zlib \
-    libtasn1 \
-    pcre2 \
-    openssl \
     curl
 
 # 비루트 사용자 생성
