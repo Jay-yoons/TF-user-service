@@ -37,10 +37,19 @@ spring:
     user:
       name: admin
       password: admin123
+  
+  # 읽기 전용 파일시스템 대비 설정
+  servlet:
+    multipart:
+      location: /writable/temp  # 파일 업로드 임시 디렉토리
 
 server:
   port: 8080
   shutdown: graceful
+  tomcat:
+    basedir: /writable/temp  # Tomcat 기본 디렉토리
+    accesslog:
+      enabled: false  # 로그 파일 쓰기 방지
 
 management:
   endpoints:
