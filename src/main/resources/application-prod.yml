@@ -47,7 +47,7 @@ server:
   port: 8080
   shutdown: graceful
   tomcat:
-    basedir: /writable/temp  # Tomcat 기본 디렉토리
+    basedir: /writable/tomcat  # Tomcat 기본 디렉토리
     accesslog:
       enabled: false  # 로그 파일 쓰기 방지
 
