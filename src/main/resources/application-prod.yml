@@ -34,9 +34,10 @@ spring:
     lazy-initialization: false
     banner-mode: off
   security:
-    user:
-      name: admin
-      password: admin123
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${COGNITO_ISSUER_URI}
   
   # 읽기 전용 파일시스템 대비 설정
   servlet:
