@@ -70,6 +70,8 @@ logging:
     org.hibernate.type.descriptor.sql.BasicBinder: INFO
     org.springframework.web: INFO
     org.springframework.boot: INFO
+  file:
+    path: /app/logs  # 로그 파일 경로
 
 aws:
   cognito:
